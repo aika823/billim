@@ -20,37 +20,71 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-c8!li2$7(mub**e#&u67m#k24t65b!+3t07f1m_v7jrb%-d38u'
+SECRET_KEY = 'django-insecure-)1iesg7saya73$5@3+zj_eg4(hojew#^g$u_q72h*!0ywa6ba^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'billim.ap-northeast-2.elasticbeanstalk.com',
+    'billim.co.kr',
+]
 
 
 # Application definition
 
-# INSTALLED_APPS = [
-#     'django.contrib.admin',
-#     'django.contrib.auth',
-#     'django.contrib.contenttypes',
-#     'django.contrib.sessions',
-#     'django.contrib.messages',
-#     'django.contrib.staticfiles',
-# ]
+BATON = {
+    'SITE_HEADER': '패스트캠퍼스 백오피스',
+    'SITE_TITLE': '패스트캠퍼스 백오피스',
+    'INDEX_TITLE': '패스트캠퍼스 관리자페이지',
+    'SUPPORT_HREF': 'https://fastcampus.co.kr',
+    'COPYRIGHT': 'copyright © 2020 Fastcampus',
+    'POWERED_BY': '<a href="https://fastcampus.co.kr">Fastcampus</a>',
+    'MENU_TITLE': '패스트캠퍼스',
+    'MENU': (
+        { 'type': 'title', 'label': 'main' },
+        {
+            'type': 'app',
+            'name': 'user',
+            'label': '사용자',
+            'icon': 'fa fa-lock',
+            'models': (
+                {
+                    'name': 'user',
+                    'label': '사용자'
+                },
+            )
+        },
+        {
+            'type': 'free', 'label': '주문', 'default_open': True, 'children': [
+                { 'type': 'free', 'label': '주문', 'url': '/admin/order/order/' },
+                { 'type': 'free', 'label': '주문 날짜 뷰', 'url': '/admin/order/order/date_view/' },
+            ]
+        },
+        {
+            'type': 'app',
+            'name': 'product',
+            'label': '상품',
+            'models': (
+                {
+                    'name': 'product',
+                    'label': '상품'
+                },
+            )
+        },
+        { 'type': 'free', 'label': '매뉴얼', 'url': '/admin/manual' },
+    ),
+}
 
 INSTALLED_APPS = [
     # 'baton',
-    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
     'django.contrib.humanize',
-    
     'rest_framework',
     'user.apps.UserConfig',
     'order.apps.OrderConfig',
