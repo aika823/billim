@@ -1,7 +1,9 @@
+from django.http import request
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
 from django.views.generic.edit import FormView
 from django.contrib.auth.hashers import make_password
+from django.views.generic.list import ListView
 from .forms import RegisterForm, LoginForm
 from .models import User
 
@@ -18,7 +20,16 @@ def logout(request):
     return redirect('/')
 
 def callback(request):
+    print("###################")
+    for value in request.__dict__:
+        print(value)
+    
+    
     return render(request, 'callback.html')
+
+
+
+
 
 class RegisterView(FormView):
     template_name = 'register.html'
@@ -27,7 +38,7 @@ class RegisterView(FormView):
 
     def form_valid(self, form):
         user = User(
-            email=form.data.get('email'),
+            email=form.data.get('email'),   
             password=make_password(form.data.get('password')),
             level='user'
         )
