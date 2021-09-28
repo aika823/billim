@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block header %}
+<script>
+  function product_detail(id) {
+    $.ajax({
+      url: "/api/product/" + id,
+      success: function (result) {
+        $("#product-" + id).popover({
+          html: true,
+          content: result.name + "<br/>" + result.price
+        }).popover('show');
+      }
+    });
+  }
+
+  function product_leave(id) {
+    $("#product-" + id).popover('hide');
+  }
+  $(document).ready(function () {});
+</script>
+{% endblock %}
+{% block contents %}
+<div class="row mt-5">
+  <div class="col-12">
+    <table class="table table-light">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">상품명</th>
+          <th scope="col">가격</th>
+          <th scope="col">등록날짜</th>
+        </tr>
+      </thead>
+      <tbody class="text-dark">
+        {% for product in product_list %}
+        <tr>
+          <th scope="row">{{ product.id }}</th>
+          <th><a id="product-{{ product.id }}" onmouseenter="product_detail({{ product.id }});"
+              onmouseleave="product_leave({{ product.id }});" href="/product/{{ product.id }}">{{ product.name }}</a>
+          </th>
+          <th>{{ product.price|intcomma }} 원</th>
+          <th>{{ product.register_date|date:'Y-m-d H:i' }}</th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row mt-5">
+  {% if is_paginated %}
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+    <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in paginator.page_range %}
+    {% if page_obj.number == i %}
+    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+    {% else %}
+    <li><a href="?page={{ i }}">{{ i }}</a></li>
+    {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+    {% else %}
+    <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+  {% endif %}
+</div>
+
+{% endblock %}
