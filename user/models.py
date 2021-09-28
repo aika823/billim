@@ -16,6 +16,6 @@ class User(models.Model):
         return self.email
 
     class Meta:
-        db_table = 'fastcampus_user'
+        db_table = 'user'
         verbose_name = '사용자'
         verbose_name_plural = '사용자'

@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 class Order(models.Model):
     user = models.ForeignKey('user.User', on_delete=models.CASCADE, verbose_name='사용자')
     product = models.ForeignKey('product.Product', on_delete=models.CASCADE, verbose_name='상품')
@@ -22,6 +20,6 @@ class Order(models.Model):
         return str(self.user) + ' ' + str(self.product)
 
     class Meta:
-        db_table = 'fastcampus_order'
+        db_table = 'order'
         verbose_name = '주문'
         verbose_name_plural = '주문'

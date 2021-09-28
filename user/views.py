@@ -11,6 +11,14 @@ from .models import User
 def index(request):
     return render(request, 'index.html', { 'email': request.session.get('user') })
 
+def logout(request):
+    if 'user' in request.session:
+        del(request.session['user'])
+        
+    return redirect('/')
+
+def callback(request):
+    return render(request, 'callback.html')
 
 class RegisterView(FormView):
     template_name = 'register.html'
@@ -29,7 +37,8 @@ class RegisterView(FormView):
 
 
 class LoginView(FormView):
-    template_name = 'login.html'
+    # template_name = 'login.html'
+    template_name = 'login_form.html'
     form_class = LoginForm
     success_url = '/'
 
@@ -37,9 +46,3 @@ class LoginView(FormView):
         self.request.session['user'] = form.data.get('email')
 
         return super().form_valid(form)
-
-def logout(request):
-    if 'user' in request.session:
-        del(request.session['user'])
-
-    return redirect('/')

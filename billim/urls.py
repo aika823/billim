@@ -18,7 +18,7 @@ from datetime import date
 from django.contrib import admin
 from django.template.response import TemplateResponse
 from django.urls import path, include, re_path
-from user.views import index, logout, RegisterView, LoginView
+from user.views import callback, index, logout, RegisterView, LoginView
 from product.views import (
     ProductList, ProductCreate, ProductDetail,
     ProductListAPI, ProductDetailAPI
@@ -31,7 +31,7 @@ from .functions import get_exchange
 
 orig_index = admin.site.index
 
-def fastcampus_index(request, extra_context=None):
+def index(request, extra_context=None):
     base_date = datetime.datetime.now() - datetime.timedelta(days=7)
     order_data = {}
     for i in range(7):
@@ -48,20 +48,24 @@ def fastcampus_index(request, extra_context=None):
 
     return orig_index(request, extra_context)
 
-admin.site.index = fastcampus_index
+admin.site.index = index
 
 urlpatterns = [
-    re_path(r'^admin/manual/$',
-        TemplateView.as_view(template_name='admin/manual.html',
-        extra_context={'title': '매뉴얼', 'site_title': '패스트캠퍼스', 'site_header': '패스트캠퍼스'})
-    ),
+    # re_path(r'^admin/manual/$',
+    #     TemplateView.as_view(template_name='admin/manual.html',
+    #     extra_context={'title': '매뉴얼', 'site_title': '패스트캠퍼스', 'site_header': '패스트캠퍼스'})
+    # ),
     path('admin/', admin.site.urls),
     path('baton/', include('baton.urls')),
 
-    path('', index),
+    # path('', index),
+    path('', LoginView.as_view()),
     path('logout/', logout),
     path('register/', RegisterView.as_view()),
+    
     path('login/', LoginView.as_view()),
+    path('login/social/naver/callback/', callback),
+
     path('product/', ProductList.as_view()),
     path('product/<int:pk>/', ProductDetail.as_view()),
     path('product/create/', ProductCreate.as_view()),

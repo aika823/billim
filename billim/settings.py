@@ -28,6 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'billim.ap-northeast-2.elasticbeanstalk.com',
     'billim.co.kr',
+    '127.0.0.1',
+    'localhost',
 ]
 
 
@@ -37,9 +39,9 @@ BATON = {
     'SITE_HEADER': '패스트캠퍼스 백오피스',
     'SITE_TITLE': '패스트캠퍼스 백오피스',
     'INDEX_TITLE': '패스트캠퍼스 관리자페이지',
-    'SUPPORT_HREF': 'https://fastcampus.co.kr',
-    'COPYRIGHT': 'copyright © 2020 Fastcampus',
-    'POWERED_BY': '<a href="https://fastcampus.co.kr">Fastcampus</a>',
+    'SUPPORT_HREF': 'https://billim.co.kr',
+    'COPYRIGHT': 'copyright © 2021 Billim',
+    'POWERED_BY': '<a href="https://billim.co.kr">Billim</a>',
     'MENU_TITLE': '패스트캠퍼스',
     'MENU': (
         { 'type': 'title', 'label': 'main' },
