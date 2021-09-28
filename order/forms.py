@@ -1,7 +1,7 @@
 from django import forms
 from .models import Order
 from product.models import Product
-from fcuser.models import Fcuser
+from user.models import User
 from django.db import transaction
 
 

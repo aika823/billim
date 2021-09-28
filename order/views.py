@@ -2,12 +2,12 @@ from django.shortcuts import render, redirect
 from django.views.generic.edit import FormView
 from django.views.generic import ListView
 from django.utils.decorators import method_decorator
-from fcuser.decorators import login_required
+from user.decorators import login_required
 from django.db import transaction
 from .forms import RegisterForm
 from .models import Order
 from product.models import Product
-from fcuser.models import Fcuser
+from user.models import User
 
 # Create your views here.
 
@@ -22,7 +22,7 @@ class OrderCreate(FormView):
             order = Order(
                 quantity=form.data.get('quantity'),
                 product=prod,
-                fcuser=Fcuser.objects.get(email=self.request.session.get('user'))
+                user=User.objects.get(email=self.request.session.get('user'))
             )
             order.save()
             prod.stock -= int(form.data.get('quantity'))
@@ -46,5 +46,5 @@ class OrderList(ListView):
     context_object_name = 'order_list'
 
     def get_queryset(self, **kwargs):
-        queryset = Order.objects.filter(fcuser__email=self.request.session.get('user'))
+        queryset = Order.objects.filter(user__email=self.request.session.get('user'))
         return queryset

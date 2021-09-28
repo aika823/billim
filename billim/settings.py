@@ -30,13 +30,32 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+# INSTALLED_APPS = [
+#     'django.contrib.admin',
+#     'django.contrib.auth',
+#     'django.contrib.contenttypes',
+#     'django.contrib.sessions',
+#     'django.contrib.messages',
+#     'django.contrib.staticfiles',
+# ]
+
 INSTALLED_APPS = [
+    # 'baton',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'django.contrib.humanize',
+    
+    'rest_framework',
+    'user.apps.UserConfig',
+    'order.apps.OrderConfig',
+    'product.apps.ProductConfig',
+    'baton.autodiscover',
 ]
 
 MIDDLEWARE = [
