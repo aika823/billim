@@ -17,6 +17,6 @@ class UserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(User, UserAdmin)
-admin.site.site_header = '패스트캠퍼스'
-admin.site.index_title = '패스트캠퍼스'
-admin.site.site_title = '패스트캠퍼스'
+admin.site.site_header = '빌림'
+admin.site.index_title = '빌림'
+admin.site.site_title = '빌림'
