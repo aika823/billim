@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 
+
+{% block extrahead %}
+{{ block.super }}
+  <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+{% endblock %}
+
+
+
 {% block contents %}
+
 <div class="row mt-5">
   <div class="col-12 text-center">
     <h1>로그인</h1>
@@ -27,6 +37,15 @@
       {% endfor %}
       <button type="submit" class="btn btn-primary">로그인</button>
     </form>
+    
+    <button onclick="location.href='https://nid.naver.com/nidlogin.login?oauth_token=dza07Ga34gZRNUyKTq&consumer_key=WO73y3DTPypJ9B7qq56N&logintp=oauth2&nurl=https%3A%2F%2Fnid.naver.com%2Foauth2.0%2Fauthorize%3Fresponse_type%3Dtoken%26state%3D96c16282-c16c-4400-b38e-edb28026b834%26client_id%3DWO73y3DTPypJ9B7qq56N%26redirect_uri%3Dhttp%253A%252F%252Fbillim.co.kr%252Flogin%252Fsocial%252Fnaver%252Fcallback%252F%26locale%3Dko_KR%26inapp_view%3D%26oauth_os%3D&locale=ko_KR&inapp_view=&svctype='">
+      네이버 로그인 버튼
+    </button>
+      
+    <button onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=afa386bd37692148a6c914da561c8458&redirect_uri=http://localhost:8000/user/callback/kakao&response_type=code'">
+      카카오 로그인 버튼
+    </button>
   </div>
 </div>
+
 {% endblock %}

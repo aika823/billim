@@ -8,15 +8,21 @@
 
 
 <div id="userInfo">
-<h1>네이버로 로그인된 유저 정보입니다.</h1>
-</div>
+  <h1>TEST DATA</h1>
+  <h2>{{test}}</h2>
 
+  <h1>CODE</h1>
+  <h2>{{code}}</h2>
+
+
+  <h1>access_token</h1>
+  <h2>{{access_token}}</h2>
+</div>
 
 <script type="text/javascript">
 //   var naver_id_login = new naver_id_login("WO73y3DTPypJ9B7qq56N", "http://localhost:8000/login/social/naver/callback/");
   var naver_id_login = new naver_id_login("WO73y3DTPypJ9B7qq56N", "http://billim.co.kr/login/social/naver/callback/");
-  // 접근 토큰 값 출력
-//   alert(naver_id_login.oauthParams.access_token);
+  alert("로그인 되었습니다.");
   // 네이버 사용자 프로필 조회
   naver_id_login.get_naver_userprofile("naverSignInCallback()");
   // 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function

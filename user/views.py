@@ -1,18 +1,22 @@
+from django import VERSION
 from django.http import request
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
 from django.views.generic.edit import FormView
 from django.contrib.auth.hashers import make_password
 from django.views.generic.list import ListView
-from .forms import LoginForm
-from .models import User
-
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
-from .models import User
-from .forms import LoginForm
 
+from .forms import LoginForm
+from .models import User
+
+import requests
+import time
+
+from rest_framework import status
+from rest_framework.response import Response
 
 def home(request):
     return render(request, 'home.html')
@@ -26,9 +30,40 @@ def logout(request):
     return redirect('/')
 
 def callback(request):
-    for value in request.__dict__:
-        print(value)
-    return render(request, 'callback.html')
+    url = 'https://kauth.kakao.com/oauth/token'
+    code = request.GET.get('code')
+    data = {
+        'grant_type' : 'authorization_code',
+        'client_id' : '8697dec0f53599c5d7f2502389d16f72',
+        'redirect_uri' : 'http://localhost:8000/user/callback/kakao',
+        'code' : code,
+    }
+    response = requests.request("POST", url, data=data, verify=False)
+    access_token = response.json()['access_token']
+
+    url2 = 'https://kapi.kakao.com/v2/user/me'
+    my_token = 'Bearer '+str(access_token)
+    header = {
+        'Authorization': my_token
+    }
+    response2 = requests.request("POST", url2, headers=header, verify=False)
+    
+    password = 'kakao'
+    username = response2.json()['kakao_account']['profile']['nickname']
+    email = response2.json()['kakao_account']['email']
+
+
+
+    user = User(
+                username=username,
+                email=email,
+                password=make_password(password)
+            )
+
+    user.save()
+
+    
+    return render(request, 'callback.html', {'test': response2.json(), 'code':code, 'access_token':access_token})
 
 def login(request):
     if request.method == 'POST':

@@ -74,6 +74,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.sites',
+
+    'allauth', 
+    'allauth.account', 
+    'allauth.socialaccount', 
+    'allauth.socialaccount.providers.naver',
+
     'rest_framework',
     'user.apps.UserConfig',
     'order.apps.OrderConfig',
