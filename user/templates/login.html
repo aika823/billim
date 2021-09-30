@@ -34,24 +34,10 @@
       {% endfor %}
       <button type="submit" class="btn btn-primary">로그인</button>
     </form>
-
-  <!-- 네이버아이디로로그인 버튼 노출 영역 -->
-  <div id="naver_id_login"></div>
-  <!-- //네이버아이디로로그인 버튼 노출 영역 -->
-  <script type="text/javascript">
-  	var naver_id_login = new naver_id_login("WO73y3DTPypJ9B7qq56N", "https://localhost:8000/user/callback/login");
-  	var state = naver_id_login.getUniqState();
-  	naver_id_login.setButton("white", 2,40);
-  	naver_id_login.setDomain("https://localhost:8000");
-  	naver_id_login.setState(state);
-  	naver_id_login.setPopup();
-  	naver_id_login.init_naver_id_login();
-  </script>
-
-    <button onclick="location.href='https://nid.naver.com/oauth2.0/authorize?response_type=code&amp;client_id=WO73y3DTPypJ9B7qq56N&amp;redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fuser%2Fcallback%2Fnaver%2F&amp;state=7a74649e-d714-438f-a3fc-991c8b6f4bc7'">
+    <button onclick="location.href='https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=WO73y3DTPypJ9B7qq56N&redirect_uri={{url}}/user/callback/naver/&state=7a74649e-d714-438f-a3fc-991c8b6f4bc7'">
       네이버 로그인 버튼
     </button>
-    <button onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=afa386bd37692148a6c914da561c8458&redirect_uri=http://localhost:8000/user/callback/kakao&response_type=code'">
+    <button onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=afa386bd37692148a6c914da561c8458&redirect_uri={{url}}/user/callback/kakao&response_type=code'">
       카카오 로그인 버튼
     </button>
   </div>

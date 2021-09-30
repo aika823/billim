@@ -20,7 +20,8 @@ import urllib.request
 from rest_framework import status
 from rest_framework.response import Response
 
-billim_url = 'http://localhost:8000'
+# billim_url = 'http://localhost:8000'
+billim_url = 'http://billim.co.kr'
 
 def home(request):
     return render(request, 'home.html')
@@ -119,7 +120,7 @@ def login(request):
             return redirect('/')
     else:
         form = LoginForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'login.html', {'form': form, 'url':billim_url})
 
 def register(request):
     if request.method == 'GET':
