@@ -12,6 +12,9 @@ SECRET_KEY = 'django-insecure-)1iesg7saya73$5@3+zj_eg4(hojew#^g$u_q72h*!0ywa6ba^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SITE_ID = 1
+
+
 ALLOWED_HOSTS = [
     'billim.ap-northeast-2.elasticbeanstalk.com',
     'billim.co.kr',
@@ -87,6 +90,8 @@ INSTALLED_APPS = [
     'product.apps.ProductConfig',
     'baton.autodiscover',
     
+
+    # 'user',
     'board',
     'tag',
 ]

@@ -7,6 +7,7 @@
   </div>
 </div>
 <div class="row mt-5">
+  <!-- 로그인 된 경우 -->
   {% if request.session.user %}
   <div class="col-12">
     <button class="btn btn-primary btn-block" onclick="location.href='/user/logout'">로그아웃</button>

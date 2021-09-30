@@ -8,15 +8,14 @@ from django.views.generic.list import ListView
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
-
 from .forms import LoginForm
 from .models import User
-
 import requests
 import time
-
 from rest_framework import status
 from rest_framework.response import Response
+
+billim_url = 'http://localhost:8000'
 
 def home(request):
     return render(request, 'home.html')
@@ -30,40 +29,48 @@ def logout(request):
     return redirect('/')
 
 def callback(request):
-    url = 'https://kauth.kakao.com/oauth/token'
+    pass
+
+def callback_naver(request):
+    print("#####################################")
+    print(request.GET)
+    return render(request, 'home.html')
+    # return render(request, 'home.html', {'test': user_info, 'code':code, 'access_token':access_token})
+
+def callback_kakao(request):
+    
+    # 인증 요청
+    url_auth = 'https://kauth.kakao.com/oauth/token'  
     code = request.GET.get('code')
     data = {
         'grant_type' : 'authorization_code',
         'client_id' : '8697dec0f53599c5d7f2502389d16f72',
-        'redirect_uri' : 'http://localhost:8000/user/callback/kakao',
+        'redirect_uri' : billim_url+'/user/callback/kakao',
         'code' : code,
     }
-    response = requests.request("POST", url, data=data, verify=False)
-    access_token = response.json()['access_token']
-
-    url2 = 'https://kapi.kakao.com/v2/user/me'
-    my_token = 'Bearer '+str(access_token)
-    header = {
-        'Authorization': my_token
-    }
-    response2 = requests.request("POST", url2, headers=header, verify=False)
+    response = requests.request("POST", url_auth, data=data, verify=False).json()
+    access_token = response['access_token']
     
-    password = 'kakao'
-    username = response2.json()['kakao_account']['profile']['nickname']
-    email = response2.json()['kakao_account']['email']
+    # 유저 정보 조회
+    url_user_info = 'https://kapi.kakao.com/v2/user/me'
+    my_token = 'Bearer '+str(access_token)
+    header = {'Authorization': my_token}
+    user_info = requests.request("POST", url_user_info, headers=header, verify=False).json()
+    username = user_info['kakao_account']['profile']['nickname']
+    email = user_info['kakao_account']['email']
 
-
-
+    # DB에 추가
     user = User(
                 username=username,
                 email=email,
-                password=make_password(password)
+                password=None,
+                social_login='kakao'
             )
-
     user.save()
-
     
-    return render(request, 'callback.html', {'test': response2.json(), 'code':code, 'access_token':access_token})
+    # 카카오 로그인 성공 
+    request.session['user'] = user.id
+    return render(request, 'home.html', {'test': user_info, 'code':code, 'access_token':access_token})
 
 def login(request):
     if request.method == 'POST':
@@ -83,7 +90,6 @@ def register(request):
         email = request.POST.get('email', None)
         password = request.POST.get('password', None)
         re_password = request.POST.get('re-password', None)
-
         res_data = {}
 
         if not (username and email and password and re_password):
@@ -96,7 +102,6 @@ def register(request):
                 email=email,
                 password=make_password(password)
             )
-
             user.save()
 
         return render(request, 'register.html', res_data)
@@ -116,7 +121,6 @@ def register(request):
 
 
 class LoginView(FormView):
-    # template_name = 'login.html'
     template_name = 'login_form.html'
     form_class = LoginForm
     success_url = '/'
