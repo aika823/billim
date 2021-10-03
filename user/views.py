@@ -15,8 +15,8 @@ from .models import User
 
 client_id_naver = 'WO73y3DTPypJ9B7qq56N'
 client_id_kakao = 'afa386bd37692148a6c914da561c8458'
-billim_url = 'http://localhost:8000'
-# billim_url = 'http://billim.co.kr'
+# billim_url = 'http://localhost:8000'
+billim_url = 'http://billim.co.kr'
 
 def home(request):
     return render(request, 'home.html')
