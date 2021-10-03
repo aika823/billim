@@ -1,4 +1,5 @@
-import json
+import requests
+import base64
 from django import VERSION
 from django.http import request
 from django.shortcuts import render, redirect
@@ -11,17 +12,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from .forms import LoginForm
 from .models import User
-import requests
-import time
-import base64
-import os
-import sys
-import urllib.request
-from rest_framework import status
-from rest_framework.response import Response
 
-# billim_url = 'http://localhost:8000'
-billim_url = 'http://billim.co.kr'
+client_id_naver = 'WO73y3DTPypJ9B7qq56N'
+client_id_kakao = 'afa386bd37692148a6c914da561c8458'
+billim_url = 'http://localhost:8000'
+# billim_url = 'http://billim.co.kr'
 
 def home(request):
     return render(request, 'home.html')
@@ -161,7 +156,7 @@ def register(request):
 
 
 class LoginView(FormView):
-    template_name = 'login_form.html'
+    template_name = 'login.html'
     form_class = LoginForm
     success_url = '/'
     def form_valid(self, form):

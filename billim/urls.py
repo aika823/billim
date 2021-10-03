@@ -52,7 +52,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('baton/', include('baton.urls')),
 
-    path('', index),
     # path('', LoginView.as_view()),
     path('logout/', logout),
     # path('register/', RegisterView.as_view()),

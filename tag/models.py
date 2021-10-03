@@ -12,6 +12,6 @@ class Tag(models.Model):
         return self.name
 
     class Meta:
-        db_table = 'fastcampus_tag'
+        db_table = 'tag'
         verbose_name = '패스트캠퍼스 태그'
         verbose_name_plural = '패스트캠퍼스 태그'
