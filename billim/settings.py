@@ -23,7 +23,7 @@ ALLOWED_HOSTS = [
 ]
 
 
-# Application definition
+# Application definition    
 
 BATON = {
     'SITE_HEADER': '패스트캠퍼스 백오피스',
