@@ -164,7 +164,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AWS
 
-SECRETS_PATH = os.path.join(ROOT_DIR, 'secrets.json')
+SECRETS_PATH = os.path.join(BASE_DIR, 'secret.json')
 secrets = json.loads(open(SECRETS_PATH).read())
 
 
