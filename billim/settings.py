@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-import secret
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -163,8 +163,13 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AWS
-AWS_ACCESS_KEY_ID = secret.AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY = secret.AWS_SECRET_ACCESS_KEY
+
+SECRETS_PATH = os.path.join(ROOT_DIR, '.config_secret/secrets.json')
+secrets = json.loads(open(SECRETS_PATH).read())
+
+
+AWS_ACCESS_KEY_ID = secrets['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = secrets['AWS_SECRET_ACCESS_KEY']
 AWS_REGION = 'ap-northeast-2'
 AWS_STORAGE_BUCKET_NAME = 'static.billim.co.kr'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,AWS_REGION)
