@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
@@ -11,8 +11,6 @@ from .forms import RegisterForm
 from .serializers import ProductSerializer
 from order.forms import RegisterForm as OrderForm
 
-# Create your views here.
-
 class ProductListAPI(generics.GenericAPIView, mixins.ListModelMixin):
     serializer_class = ProductSerializer
 
@@ -21,7 +19,6 @@ class ProductListAPI(generics.GenericAPIView, mixins.ListModelMixin):
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
-
 
 class ProductDetailAPI(generics.GenericAPIView, mixins.RetrieveModelMixin):
     serializer_class = ProductSerializer
@@ -32,28 +29,38 @@ class ProductDetailAPI(generics.GenericAPIView, mixins.RetrieveModelMixin):
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
-
 class ProductList(ListView):
     model = Product
     template_name = 'product.html'
     context_object_name = 'product_list'
     paginate_by = 10
 
-# @method_decorator(admin_required, name='dispatch')
-class ProductCreate(FormView):
-    template_name = 'register_product.html'
-    form_class = RegisterForm
-    success_url = '/product/'
-
-    def form_valid(self, form):
-        product = Product(
-            name=form.data.get('name'),
-            price=form.data.get('price'),
-            description=form.data.get('description'),
-            stock=form.data.get('stock')
-        )
+def create(request):
+    if(request.method == 'POST'):
+        product = Product()
+        product.name=request.POST['name']
+        product.price=request.POST['price']
+        product.description=request.POST['description']
+        product.stock=request.POST['stock']
+        product.image =request.FILES.get('image')
         product.save()
-        return super().form_valid(form)
+        return redirect('/product/')
+    else:
+        return render(request, 'register_product.html', {'form':RegisterForm})
+
+# class ProductCreate(FormView):
+#     template_name = 'register_product.html'
+#     form_class = RegisterForm
+#     success_url = '/product/'
+#     def form_valid(self, form, request):
+#         product = Product()
+#         product.name=request.POST['name']
+#         product.price=request.POST['price']
+#         product.description=request.POST['description']
+#         product.stock=request.POST['stock']
+#         product.image =request.FILES.get('image')
+#         product.save()
+#         return super().form_valid(form, {'request':request})
 
 class ProductDetail(DetailView):
     template_name = 'product_detail.html'
