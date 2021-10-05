@@ -3,8 +3,10 @@ from pathlib import Path
 import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
 ROOT_DIR = os.path.dirname(BASE_DIR)
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -167,6 +169,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECRETS_PATH = os.path.join(BASE_DIR, 'secret.json')
 secrets = json.loads(open(SECRETS_PATH).read())
 
+secret_file = os.path.join(BASE_DIR, 'secrets.json')
 
 AWS_ACCESS_KEY_ID = secrets['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = secrets['AWS_SECRET_ACCESS_KEY']
@@ -179,3 +182,4 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # MEDIA
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
