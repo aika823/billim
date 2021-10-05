@@ -39,7 +39,7 @@ class ProductList(ListView):
     context_object_name = 'product_list'
     paginate_by = 10
 
-@method_decorator(admin_required, name='dispatch')
+# @method_decorator(admin_required, name='dispatch')
 class ProductCreate(FormView):
     template_name = 'register_product.html'
     form_class = RegisterForm

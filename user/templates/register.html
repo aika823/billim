@@ -1,8 +1,17 @@
 {% extends "base.html" %}
+
+
 {% block contents %}
+
+{% if messages %}
+{% for message in messages %}
+    <div>에러메시지{{message}}</div>
+{% endfor %}
+{% endif %}
+
 <div class="row mt-5">
   <div class="col-12 text-center">
-    <h1>회원가입</h1>
+    <h1>회원가입123</h1>
   </div>
 </div>
 <div class="row mt-5">
@@ -18,9 +27,11 @@
     <button onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id={{client_id_kakao}}&redirect_uri={{url}}/user/callback/kakao&response_type=code'">
       카카오로 회원가입
     </button>
+
     <form method="POST" action=".">
       {% csrf_token %}
-      <div class="form-group">
+
+      <!-- <div class="form-group"> 
         <label for="username">사용자 이름</label>
         <input type="text" class="form-control" id="username" placeholder="사용자 이름" name="username" />
       </div>
@@ -35,9 +46,22 @@
       <div class="form-group">
         <label for="re-password">비밀번호 확인</label>
         <input type="password" class="form-control" id="re-password" placeholder="비밀번호 확인" name="re-password" />
-      </div>
+      </div> -->
+
+      {% for field in form %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id_for_label }}"
+            placeholder="{{ field.label }}" name="{{ field.name }}" />
+        </div>  
+        {% if field.errors %}
+        <span style="color: red;">{{ field.errors }}</span>
+        {% endif %} 
+      {% endfor %}
+
       <button type="submit" class="btn btn-primary">등록</button>
     </form>
+
   </div>
 </div>
 {% endblock %}

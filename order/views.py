@@ -11,7 +11,7 @@ from user.models import User
 
 # Create your views here.
 
-@method_decorator(login_required, name='dispatch')
+# @method_decorator(login_required, name='dispatch')
 class OrderCreate(FormView):
     form_class = RegisterForm
     success_url = '/product/'
@@ -40,7 +40,7 @@ class OrderCreate(FormView):
         })
         return kw
 
-@method_decorator(login_required, name='dispatch')
+# @method_decorator(login_required, name='dispatch')
 class OrderList(ListView):
     template_name = 'order.html'
     context_object_name = 'order_list'
