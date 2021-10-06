@@ -2,6 +2,5 @@
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
-# secret.json
-# .secret
+secret
 *.pyc 
