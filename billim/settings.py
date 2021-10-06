@@ -167,7 +167,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # secrets = json.loads(open('static/secret.json').read())
 
-secret_file = os.path.join(BASE_DIR, 'secrets.json')
+secret_file = os.path.join(BASE_DIR, 'secret.json')
 with open(secret_file) as f:
     secrets = json.loads(f.read())
 
