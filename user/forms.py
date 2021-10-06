@@ -51,7 +51,12 @@ class RegisterForm(forms.Form):
         widget=forms.PasswordInput, 
         error_messages={'required': '비밀번호를 입력해주세요.'}
     )
-    image = forms.ImageField(
+    # image = forms.ImageField(
+    #     error_messages={'required': '이미지를 입력해주세요.'}, 
+    #     label='이미지',
+    # )
+    image = forms.FileField(
         error_messages={'required': '이미지를 입력해주세요.'}, 
-        label='이미지'
-    )
+        label='이미지!',
+        widget=forms.FileInput(attrs={'accept':'image/*,video/*'})
+    ) 

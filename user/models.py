@@ -11,7 +11,7 @@ class PathAndRename(object):
         ext = filename.split('.')[-1]
         now = datetime.datetime.now()
         date_time = now.strftime("%y%m%d_%H%M%S")
-        filename = 'img_product_'+str(date_time)+str(ext)
+        filename = 'img_product_{}.{}'.format(str(date_time), str(ext))
         return os.path.join(self.path, filename)
 
 class User(models.Model):
