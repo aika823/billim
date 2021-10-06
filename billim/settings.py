@@ -163,9 +163,14 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AWS
-SECRET_PATH = os.path.join(BASE_DIR, 'secret.json')
+# SECRET_PATH = os.path.join(BASE_DIR, 'secret.json')
 
-secrets = json.loads(open('static/secret.json').read())
+# secrets = json.loads(open('static/secret.json').read())
+
+secret_file = os.path.join(BASE_DIR, 'secrets.json')
+with open(secret_file) as f:
+    secrets = json.loads(f.read())
+
 AWS_ACCESS_KEY_ID = secrets['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = secrets['AWS_SECRET_ACCESS_KEY']
 
