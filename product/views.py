@@ -48,20 +48,6 @@ def create(request):
     else:
         return render(request, 'register_product.html', {'form':RegisterForm})
 
-# class ProductCreate(FormView):
-#     template_name = 'register_product.html'
-#     form_class = RegisterForm
-#     success_url = '/product/'
-#     def form_valid(self, form, request):
-#         product = Product()
-#         product.name=request.POST['name']
-#         product.price=request.POST['price']
-#         product.description=request.POST['description']
-#         product.stock=request.POST['stock']
-#         product.image =request.FILES.get('image')
-#         product.save()
-#         return super().form_valid(form, {'request':request})
-
 class ProductDetail(DetailView):
     template_name = 'product_detail.html'
     queryset = Product.objects.all()

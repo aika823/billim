@@ -10,10 +10,12 @@ from django.contrib.auth.hashers import check_password
 class LoginForm(forms.Form):
     username = forms.CharField(
         error_messages={'required': '아이디를 입력해주세요.'},
-        max_length=32, label="사용자 이름")
+        max_length=32, label="사용자 이름"
+    )
     password = forms.CharField(
         error_messages={'required': '비밀번호를 입력해주세요.'},
-        widget=forms.PasswordInput, label="비밀번호")
+        widget=forms.PasswordInput, label="비밀번호"
+    )
     def clean(self):
         cleaned_data = super().clean()
         username = cleaned_data.get('username')
@@ -30,8 +32,15 @@ class LoginForm(forms.Form):
                 self.user_id = user.id
 
 class RegisterForm(forms.Form):
-    username = forms.CharField()
+    username = forms.CharField(
+        error_messages={'required': '유저명을 입력해주세요.'},
+        max_length=64, 
+        label='유저명'
+    )
     email = forms.CharField()
     password = forms.PasswordInput()
     re_password = forms.PasswordInput()
-    profile_img = forms.ImageField()
+    image = forms.ImageField(
+        error_messages={'required': '이미지를 입력해주세요.'}, 
+        label='이미지'
+    )

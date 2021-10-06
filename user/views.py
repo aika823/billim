@@ -18,9 +18,8 @@ from rest_framework.views import APIView
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from django.shortcuts import get_object_or_404
 
-from user.serializers import DropBoxSerializer
 from .forms import LoginForm, RegisterForm
-from .models import DropBox, User
+from .models import User
 
 from django.contrib import messages 
 from django.http import HttpResponseRedirect
@@ -39,8 +38,6 @@ from rest_framework import mixins
 from user.decorators import admin_required
 from .forms import RegisterForm
 from order.forms import RegisterForm as OrderForm
-
-
 
 client_id_naver = 'WO73y3DTPypJ9B7qq56N'
 client_id_kakao = 'afa386bd37692148a6c914da561c8458'
@@ -143,17 +140,27 @@ def login(request):
     return render(request, 'login.html', {'form': form, 'url':billim_url})
 
 
-class RegisterView(FormView):
-    template_name = 'register.html'
-    form_class = RegisterForm
-    success_url = '/user/login/'
-    def form_valid(self, form):
-        print("###########################################")
-        # user = User()
-        # product.save()
-        return super().form_valid(form)
+# class RegisterView(FormView):
+#     template_name = 'register.html'
+#     form_class = RegisterForm
+#     success_url = '/user/login/'
+#     def form_valid(self, form):
+#         print("###########################################")
+#         # user = User()
+#         # product.save()
+#         return super().form_valid(form)
 
-
+def create(request):
+    if(request.method == 'POST'):
+        user = User()
+        user.username=request.POST.get('username')
+        user.email=request.POST.get('email')
+        user.password=request.POST.get('password')
+        user.image =request.FILES.get('image')
+        user.save()
+        return redirect('/user/login')
+    else:
+        return render(request, 'register.html', {'form':RegisterForm})
     
 
 class LoginView(FormView):
