@@ -172,6 +172,8 @@ secret_file = os.path.join(STATICFILES_DIRS[0], 'secret.json')
 with open(secret_file) as f:
     secrets = json.loads(f.read())
 
+print (secret_file)
+
 AWS_ACCESS_KEY_ID = secrets['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = secrets['AWS_SECRET_ACCESS_KEY']
 
