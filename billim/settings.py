@@ -2,10 +2,10 @@ import os
 from pathlib import Path
 import json
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# BASE, ROOT
 BASE_DIR = Path(__file__).resolve().parent.parent
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT_DIR = os.path.dirname(BASE_DIR)
+PROJECT_ROOT    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-)1iesg7saya73$5@3+zj_eg4(hojew#^g$u_q72h*!0ywa6ba^'
@@ -22,16 +22,15 @@ ALLOWED_HOSTS = [
     'localhost',
 ]
 
-
 # Application definition    
 BATON = {
-    'SITE_HEADER': '패스트캠퍼스 백오피스',
-    'SITE_TITLE': '패스트캠퍼스 백오피스',
-    'INDEX_TITLE': '패스트캠퍼스 관리자페이지',
+    'SITE_HEADER': '빌림 - 백오피스',
+    'SITE_TITLE': '빌림 - 백오피스입니다.',
+    'INDEX_TITLE': '빌림 관리자페이지',
     'SUPPORT_HREF': 'https://billim.co.kr',
     'COPYRIGHT': 'copyright © 2021 Billim',
     'POWERED_BY': '<a href="https://billim.co.kr">Billim</a>',
-    'MENU_TITLE': '패스트캠퍼스',
+    'MENU_TITLE': '빌림 메뉴',
     'MENU': (
         { 'type': 'title', 'label': 'main' },
         {
@@ -155,28 +154,20 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# Static files
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
-print(STATICFILES_DIRS)
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# AWS
-# SECRET_DIR = os.path.join(ROOT_DIR, 'secret')
+# SECRET
+SECRET_DIR = os.path.join(PROJECT_ROOT, 'secret')
+SECRETS = json.load(open(os.path.join(SECRET_DIR, 'secret.json'), 'rb'))
 
-PROJECT_ROOT    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SECRET_DIR      = os.path.join(PROJECT_ROOT, 'secret')
-secretssssss = json.load(open(os.path.join(SECRET_DIR, 'secret.json'), 'rb'))
-
-# secret_file = 'secret.json'
-# with open(secret_file) as f:
-    # secrets = json.loads(f.read())
-
-AWS_ACCESS_KEY_ID = secretssssss['AWS_ACCESS_KEY_ID']
-AWS_SECRET_ACCESS_KEY = secretssssss['AWS_SECRET_ACCESS_KEY']
-
+# AWS SETTINGS
+AWS_ACCESS_KEY_ID = SECRETS['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = SECRETS['AWS_SECRET_ACCESS_KEY']
 AWS_REGION = 'ap-northeast-2'
 AWS_STORAGE_BUCKET_NAME = 'static.billim.co.kr'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,AWS_REGION)
@@ -186,4 +177,3 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # MEDIA
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
