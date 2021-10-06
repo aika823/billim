@@ -168,14 +168,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECRET_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'secret')
 
 
-secrets = json.load(open(os.path.join(SECRET_DIR, 'secret.json'), 'rb'))
+secretssssss = json.load(open(os.path.join(SECRET_DIR, 'secret.json'), 'rb'))
 
 # secret_file = 'secret.json'
 # with open(secret_file) as f:
     # secrets = json.loads(f.read())
 
-AWS_ACCESS_KEY_ID = secrets['AWS_ACCESS_KEY_ID']
-AWS_SECRET_ACCESS_KEY = secrets['AWS_SECRET_ACCESS_KEY']
+AWS_ACCESS_KEY_ID = secretssssss['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = secretssssss['AWS_SECRET_ACCESS_KEY']
 
 AWS_REGION = 'ap-northeast-2'
 AWS_STORAGE_BUCKET_NAME = 'static.billim.co.kr'
