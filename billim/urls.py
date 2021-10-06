@@ -59,8 +59,8 @@ urlpatterns = [
     # path('', include('user.urls')),  # new
     path('user/', include('user.urls')),
     
-    path('logout/', logout),
-    path('login/', LoginView.as_view()),
+    # path('logout/', logout),
+    # path('login/', LoginView.as_view()),
     
     path('board/', include('board.urls')),
 

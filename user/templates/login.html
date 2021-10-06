@@ -22,7 +22,8 @@
   <div class="col-12">
     <form method="POST" action=".">
       {% csrf_token %}
-      {% for field in form %}`
+      
+      {% for field in form %}
         <div class="form-group">
           <label for="{{ field.id_for_label }}">{{ field.label }}</label>
           <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id_for_label }}"
@@ -32,6 +33,7 @@
         <span style="color: red">{{ field.errors }}</span>
         {% endif %}
       {% endfor %}
+      
       <button type="submit" class="btn btn-primary">로그인</button>
     </form>
     <button onclick="location.href='https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=WO73y3DTPypJ9B7qq56N&redirect_uri={{url}}/user/callback/naver/&state=7a74649e-d714-438f-a3fc-991c8b6f4bc7'">

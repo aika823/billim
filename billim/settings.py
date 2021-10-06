@@ -2,10 +2,12 @@ import os
 from pathlib import Path
 import json
 
-# BASE, ROOT
+# BASE, ROOT, URL
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_DIR = os.path.dirname(BASE_DIR)
 PROJECT_ROOT    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BILLIM_URL = 'http://localhost:8000'
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-)1iesg7saya73$5@3+zj_eg4(hojew#^g$u_q72h*!0ywa6ba^'

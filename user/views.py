@@ -1,48 +1,20 @@
 import requests
 import base64
-from django import VERSION
-from django.http import request
 
-from django.shortcuts import render, redirect
-from django.views.generic import DetailView
-from django.views.generic.edit import FormView
+from django.conf import settings
 from django.contrib.auth.hashers import make_password
-from django.views.generic.list import ListView
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth.hashers import make_password, check_password
-from rest_framework import viewsets, parsers, status
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from django.views.generic.edit import FormView
 
-from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
-from django.shortcuts import get_object_or_404
-
+from .forms import RegisterForm
 from .forms import LoginForm, RegisterForm
 from .models import User
-
-from django.contrib import messages 
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
 from .forms import RegisterForm
-
-from rest_framework.generics import ListAPIView, RetrieveAPIView
-
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
-from django.views.generic.edit import FormView
-from django.utils.decorators import method_decorator
-from rest_framework import generics
-from rest_framework import mixins
-
 from user.decorators import admin_required
-from .forms import RegisterForm
-from order.forms import RegisterForm as OrderForm
 
 client_id_naver = 'WO73y3DTPypJ9B7qq56N'
 client_id_kakao = 'afa386bd37692148a6c914da561c8458'
-# billim_url = 'http://localhost:8000'
-billim_url = 'http://billim.co.kr'
+billim_url = settings.BILLIM_URL
 
 def home(request):
     return render(request, 'home.html')
@@ -82,7 +54,6 @@ def callback_naver(request):
     url_user_info = "https://openapi.naver.com/v1/nid/me"
     user_header = {'Authorization':"Bearer " + access_token}
     user_info = requests.request("POST", url_user_info, headers=user_header).json()
-    
     username = user_info['response']['name']
     email = user_info['response']['email']
 
@@ -94,7 +65,7 @@ def callback_naver(request):
                 social_login='naver'
             )
     user.save()
-    # 카카오 로그인 성공 
+    # 네이버 로그인 성공 
     request.session['user'] = user.id
     return render(request, 'home.html', {'test': user_info, 'code':code, 'access_token':access_token})
 
@@ -139,29 +110,27 @@ def login(request):
         form = LoginForm()
     return render(request, 'login.html', {'form': form, 'url':billim_url})
 
-
-# class RegisterView(FormView):
-#     template_name = 'register.html'
-#     form_class = RegisterForm
-#     success_url = '/user/login/'
-#     def form_valid(self, form):
-#         print("###########################################")
-#         # user = User()
-#         # product.save()
-#         return super().form_valid(form)
-
 def create(request):
     if(request.method == 'POST'):
         user = User()
-        user.username=request.POST.get('username')
-        user.email=request.POST.get('email')
-        user.password=request.POST.get('password')
+
+
+        user.username=request.POST['username']
+        user.email=request.POST['email']
+        user.password=make_password(request.POST['password'])
         user.image =request.FILES.get('image')
+
+        # user.username=request.POST.get('username')
+        # user.email=request.POST.get('email')
+        # user.password=make_password(request.POST.get('password'))
+        # user.image =request.FILES.get('image')
+
+
+        print("############################################"+str(request.FILES.get('image')))
         user.save()
         return redirect('/user/login')
     else:
         return render(request, 'register.html', {'form':RegisterForm})
-    
 
 class LoginView(FormView):
     template_name = 'login.html'

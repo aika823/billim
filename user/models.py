@@ -17,11 +17,11 @@ class PathAndRename(object):
 class User(models.Model):
     username = models.CharField(max_length=32, verbose_name='사용자명')
     email = models.EmailField(max_length=128, verbose_name='사용자이메일')
-    password = models.CharField(max_length=64, verbose_name='비밀번호', default=None, null=True)
+    password = models.CharField(max_length=256, verbose_name='비밀번호', default=None, null=True)
     registered_dttm = models.DateTimeField(auto_now_add=True, verbose_name='등록시간')
     social_login = models.CharField(max_length=32, verbose_name='소셜로그인', default='', null=True)
     naver_id = models.CharField(max_length=128, verbose_name='네이버 유저 키', default=None, null=True) 
-    image = models.ImageField(upload_to=PathAndRename("user/"),blank=True, null=True, default=None)
+    image = models.ImageField(upload_to=PathAndRename("user/"),blank=True, null=True)
 
     def __str__(self):
         return self.username
