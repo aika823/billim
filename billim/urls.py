@@ -12,7 +12,7 @@ from django.urls import path, include  # new
 from django.template.response import TemplateResponse
 from django.urls import path, include, re_path
 from django.conf.urls.static import static  # new
-from user.views import home, index, logout, LoginView
+from user.views import index, logout, LoginView
 from product.views import (
     ProductList, ProductDetail,
     ProductListAPI, ProductDetailAPI, create
@@ -55,8 +55,7 @@ urlpatterns = [
     path('api/', include('rest_framework.urls')),  # new
     path('baton/', include('baton.urls')),
     
-    path('', home),
-    # path('', include('user.urls')),  # new
+    path('', include('user.urls')),  # new
     path('user/', include('user.urls')),
     
     # path('logout/', logout),

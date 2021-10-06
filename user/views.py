@@ -1,10 +1,10 @@
 import requests
 import base64
 
-from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
 from django.views.generic.edit import FormView
+from django.conf import settings
 
 from .forms import RegisterForm
 from .forms import LoginForm, RegisterForm
@@ -15,9 +15,10 @@ from user.decorators import admin_required
 client_id_naver = 'WO73y3DTPypJ9B7qq56N'
 client_id_kakao = 'afa386bd37692148a6c914da561c8458'
 billim_url = settings.BILLIM_URL
+image_url = settings.IMAGE_URL
 
-def home(request):
-    return render(request, 'home.html')
+# def home(request):
+#     return render(request, 'home.html')
 
 def index(request):
     return render(request, 'index.html', { 'email': request.session.get('user') })
@@ -105,7 +106,12 @@ def login(request):
         form = LoginForm(request.POST)
         if form.is_valid():
             request.session['user'] = form.user_id
-            return redirect('/')
+            # username = User.objects.values('username')
+            username = User.objects.filter(id=form.user_id).values('username')[0]['username']
+            image_src = image_url + str(User.objects.filter(id=form.user_id).values('image')[0]['image'])
+            # username = User.objects
+
+            return render(request, 'home.html', {'username':username, 'image_src':image_src})
     else:
         form = LoginForm()
     return render(request, 'login.html', {'form': form, 'url':billim_url})
@@ -113,20 +119,10 @@ def login(request):
 def create(request):
     if(request.method == 'POST'):
         user = User()
-
-
         user.username=request.POST['username']
         user.email=request.POST['email']
         user.password=make_password(request.POST['password'])
         user.image =request.FILES.get('image')
-
-        # user.username=request.POST.get('username')
-        # user.email=request.POST.get('email')
-        # user.password=make_password(request.POST.get('password'))
-        # user.image =request.FILES.get('image')
-
-
-        print("############################################"+str(request.FILES.get('image')))
         user.save()
         return redirect('/user/login')
     else:

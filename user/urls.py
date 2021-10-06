@@ -14,6 +14,7 @@ from rest_framework.routers import SimpleRouter
 
 
 urlpatterns = [
+    path('', views.login),
     path('register/', views.create),
     # path('register/', views.RegisterView.as_view()),
     path('login/', views.login),
