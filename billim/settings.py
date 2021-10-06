@@ -164,7 +164,7 @@ print(STATICFILES_DIRS)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AWS
-SECRET_DIR = os.path.join(ROOT_DIR, '.secret')
+SECRET_DIR = os.path.join(ROOT_DIR, 'secret')
 secrets = json.load(open(os.path.join(SECRET_DIR, 'secret.json'), 'rb'))
 
 # secret_file = 'secret.json'
