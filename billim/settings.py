@@ -158,6 +158,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
+print(STATICFILES_DIRS)
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -167,7 +168,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # secrets = json.loads(open('static/secret.json').read())
 
-secret_file = os.path.join(STATICFILES_DIRS, 'secret.json')
+secret_file = os.path.join(STATICFILES_DIRS[0], 'secret.json')
 with open(secret_file) as f:
     secrets = json.loads(f.read())
 
