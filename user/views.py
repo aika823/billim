@@ -108,7 +108,7 @@ def login(request):
             request.session['user'] = form.user_id
             # username = User.objects.values('username')
             username = User.objects.filter(id=form.user_id).values('username')[0]['username']
-            image_src = image_url + str(User.objects.filter(id=form.user_id).values('image')[0]['image'])
+            image_src = str(User.objects.filter(id=form.user_id).values('image')[0]['image'])
             # username = User.objects
 
             return render(request, 'home.html', {'username':username, 'image_src':image_src})
@@ -122,7 +122,9 @@ def create(request):
         user.username=request.POST['username']
         user.email=request.POST['email']
         user.password=make_password(request.POST['password'])
-        user.image =request.FILES.get('image')
+        user.image = request.FILES.get('image')
+        user.save()
+        user.image = '{}{}'.format(image_url,user.image) # Save full url in database
         user.save()
         return redirect('/user/login')
     else:

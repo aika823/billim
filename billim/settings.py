@@ -8,7 +8,7 @@ ROOT_DIR = os.path.dirname(BASE_DIR)
 PROJECT_ROOT    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BILLIM_URL = 'http://localhost:8000'
 BILLIM_URL = 'http://billim.co.kr'
-IMAGE_URL = 'http://static.billim.co.kr/'
+IMAGE_URL = 'http://static.billim.co.kr'
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -179,5 +179,6 @@ AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400',}
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # MEDIA
-MEDIA_URL = '/media/'
+# MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = "https://%s/" % AWS_STORAGE_BUCKET_NAME

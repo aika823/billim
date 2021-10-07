@@ -35,6 +35,7 @@
       {% endfor %}
       
       <button type="submit" class="btn btn-primary">로그인</button>
+      <button type="button" class="btn btn-primary btn-block" onclick="location.href='/user/register'">회원가입</button>
     </form>
     <button onclick="location.href='https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=WO73y3DTPypJ9B7qq56N&redirect_uri={{url}}/user/callback/naver/&state=7a74649e-d714-438f-a3fc-991c8b6f4bc7'">
       네이버 로그인 버튼
