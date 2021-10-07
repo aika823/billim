@@ -21,6 +21,7 @@ urlpatterns = [
     path('logout/', views.logout),
     path('callback/kakao/', views.callback_kakao),
     path('callback/naver/', views.callback_naver),
+    path('callback/google/', views.callback_google),
 ]
 
 

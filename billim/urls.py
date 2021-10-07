@@ -52,6 +52,10 @@ urlpatterns = [
     ),
 
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
+
+
+
     path('api/', include('rest_framework.urls')),  # new
     path('baton/', include('baton.urls')),
     

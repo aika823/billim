@@ -28,6 +28,11 @@ def logout(request):
         del(request.session['user'])
     return redirect('/')
 
+def callback_google(request):
+    print(request.GET)
+    return render(request, 'home.html')
+
+
 def callback_naver(request):
     
     # 인증 요청
