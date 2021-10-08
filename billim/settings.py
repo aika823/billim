@@ -1,13 +1,17 @@
 import os
 from pathlib import Path
 import json
+import allauth
+
+
+
 
 # BASE, ROOT, URL
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_DIR = os.path.dirname(BASE_DIR)
 PROJECT_ROOT    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BILLIM_URL = 'http://localhost:8000'
-BILLIM_URL = 'http://billim.co.kr'
+# BILLIM_URL = 'http://billim.co.kr'
 IMAGE_URL = 'http://static.billim.co.kr'
 
 
@@ -81,8 +85,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     'allauth', 
-    'allauth.account', 
-    'allauth.socialaccount', 
+    'allauth.account',
+    'allauth.socialaccount',
     'allauth.socialaccount.providers.naver',
     'allauth.socialaccount.providers.google',
 
@@ -188,5 +192,54 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend', 
 ) 
 
-SITE_ID = 2 
-# LOGIN_REDIRECT_URL = '/'
+SITE_ID = 2
+
+LOGIN_REDIRECT_URL = '/'
+
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+]
+
+ACCOUNT_ADAPTER = 'user.adapter.MyAccountAdapter'
+
+# SOCIALACCOUNT_PROVIDERS = {
+#     'google': {
+#         'SCOPE': [
+#             'profile',
+#             'email',
+#         ],
+#         'AUTH_PARAMS': {
+#             'access_type': 'online',
+#         }
+#     }
+# }
+
+# SOCIALACCOUNT_PROVIDERS = {
+#     'google': {
+#         'SCOPE': [
+#             'https://www.googleapis.com/auth/userinfo.email',
+#             'https://www.googleapis.com/auth/user.emails.read',
+#             'https://www.googleapis.com/auth/user.birthday.read',
+#             'https://www.googleapis.com/auth/userinfo.profile',
+#             'https://www.googleapis.com/auth/calendar.readonly',
+#             'profile',
+#             'email',
+#             'openid',
+#         ],
+#     }
+# }
+
+# SOCIAL_AUTH_GOOGLE_OAUTH2_IGNORE_DEFAULT_AX_ATTRS = True
+# SOCIAL_AUTH_GOOGLE_OAUTH2_AX_SCHEMA_ATTRS = [
+#     ('phonenumber', 'phonenumber')
+# ]
+
+# SOCIAL_AUTH_GOOGLE_OAUTH2_IGNORE_DEFAULT_SCOPE = True
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+#     'https://www.googleapis.com/auth/plus.login',
+#     'https://www.googleapis.com/auth/userinfo.profile',
+#     'https://www.googleapis.com/auth/userinfo.email',
+#     'https://www.googleapis.com/auth/user.phonenumbers.read',
+# ]

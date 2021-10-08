@@ -1,3 +1,5 @@
+import json
+from os import access
 import requests
 import base64
 
@@ -28,13 +30,60 @@ def logout(request):
         del(request.session['user'])
     return redirect('/')
 
+def callback_google123(request):
+    print("callback_google123 function")
+    url ='https://accounts.google.com/o/oauth2/auth/identifier'
+    redirect_uri = 'http://localhost:8000/user/callback/google/login'
+    google_auth_api = "https://accounts.google.com/o/oauth2/v2/auth"
+    client_id = '1094555666329-b76moi8dkckmoe3vc9kb2qhf60r8t563.apps.googleusercontent.com'
+    scope = "https://www.googleapis.com/auth/userinfo.email "+"https://www.googleapis.com/auth/userinfo.profile"
+
+    params = {
+        'client_id':client_id,
+        'redirect_uri': redirect_uri,
+        'scope':scope,
+        'response_type':'code',
+        'state':'LW3T3VwQn30o',
+        'flowName':'GeneralOAuthFlow'
+    }
+    
+    response = redirect( f"{google_auth_api}?client_id={client_id}&response_type=code&redirect_uri={redirect_uri}&scope={scope}" ) 
+    return response
+
+    
 def callback_google(request):
-    print(request.GET)
+    # 인증 요청
+    code = request.GET.get('code')    
+    url_auth = 'https://oauth2.googleapis.com/token'
+    client_id = '1094555666329-b76moi8dkckmoe3vc9kb2qhf60r8t563.apps.googleusercontent.com'
+    client_secret = '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'
+    scope = "https://www.googleapis.com/auth/userinfo.profile"
+    data = {
+        "grant_type":'authorization_code',
+        'client_id':client_id,
+        'client_secret':client_secret,
+        'redirect_uri':'http://localhost:8000/user/callback/google/login',
+        'code':str(code),
+        'scope':scope,
+    }
+    response = requests.request("POST",url_auth,data=data).json()
+    access_token = response['access_token'] 
+    
+    # 유저 정보 조회
+    url_user_info = "https://www.googleapis.com/oauth2/v3/userinfo"
+    user_info = requests.request("GET", url_user_info, params={ 'access_token': access_token }).json()
+    
+    # url_user_info = "https://www.googleapis.com/oauth2/v3/tokeninfo"
+    # user_info = requests.request("GET", url_user_info, params={ 'id_token': response['id_token'] }).json()
+
+    # url_user_info = "https://www.googleapis.com/userinfo/v2/me"
+    # user_info = requests.request("GET", url_user_info, params={ 'access_token': access_token }).json()
+
+    print(user_info)
     return render(request, 'home.html')
 
 
 def callback_naver(request):
-    
     # 인증 요청
     code = request.GET.get('code')    
     url_auth = 'https://nid.naver.com/oauth2.0/token/'
@@ -87,6 +136,7 @@ def callback_kakao(request):
     }
     response = requests.request("POST", url_auth, data=data, verify=False).json()
     access_token = response['access_token']
+    
     # 유저 정보 조회
     url_user_info = 'https://kapi.kakao.com/v2/user/me'
     my_token = 'Bearer '+str(access_token)
@@ -94,6 +144,7 @@ def callback_kakao(request):
     user_info = requests.request("POST", url_user_info, headers=header, verify=False).json()
     username = user_info['kakao_account']['profile']['nickname']
     email = user_info['kakao_account']['email']
+    
     # DB에 추가
     user = User(
                 username=username,
@@ -102,6 +153,7 @@ def callback_kakao(request):
                 social_login='kakao'
             )
     user.save()
+    
     # 카카오 로그인 성공 
     request.session['user'] = user.id
     return render(request, 'home.html', {'test': user_info, 'code':code, 'access_token':access_token})
