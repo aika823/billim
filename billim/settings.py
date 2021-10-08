@@ -1,19 +1,15 @@
 import os
 from pathlib import Path
 import json
-import allauth
-
-
-
 
 # BASE, ROOT, URL
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_DIR = os.path.dirname(BASE_DIR)
 PROJECT_ROOT    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BILLIM_URL = 'http://localhost:8000'
+
 # BILLIM_URL = 'http://billim.co.kr'
 IMAGE_URL = 'http://static.billim.co.kr'
-
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-)1iesg7saya73$5@3+zj_eg4(hojew#^g$u_q72h*!0ywa6ba^'
@@ -130,6 +126,7 @@ TEMPLATES = [
     },
 ]
 
+# WSGI
 WSGI_APPLICATION = 'billim.wsgi.application'
 
 # Database
@@ -183,63 +180,18 @@ AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400',}
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # MEDIA
-# MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = "https://%s/" % AWS_STORAGE_BUCKET_NAME
 
+# AUTHENTICATION
+ACCOUNT_ADAPTER = 'user.adapter.MyAccountAdapter'
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend', 
 ) 
-
-SITE_ID = 2
-
 LOGIN_REDIRECT_URL = '/'
-
-
+SITE_ID = 2
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/userinfo.profile',
 ]
-
-ACCOUNT_ADAPTER = 'user.adapter.MyAccountAdapter'
-
-# SOCIALACCOUNT_PROVIDERS = {
-#     'google': {
-#         'SCOPE': [
-#             'profile',
-#             'email',
-#         ],
-#         'AUTH_PARAMS': {
-#             'access_type': 'online',
-#         }
-#     }
-# }
-
-# SOCIALACCOUNT_PROVIDERS = {
-#     'google': {
-#         'SCOPE': [
-#             'https://www.googleapis.com/auth/userinfo.email',
-#             'https://www.googleapis.com/auth/user.emails.read',
-#             'https://www.googleapis.com/auth/user.birthday.read',
-#             'https://www.googleapis.com/auth/userinfo.profile',
-#             'https://www.googleapis.com/auth/calendar.readonly',
-#             'profile',
-#             'email',
-#             'openid',
-#         ],
-#     }
-# }
-
-# SOCIAL_AUTH_GOOGLE_OAUTH2_IGNORE_DEFAULT_AX_ATTRS = True
-# SOCIAL_AUTH_GOOGLE_OAUTH2_AX_SCHEMA_ATTRS = [
-#     ('phonenumber', 'phonenumber')
-# ]
-
-# SOCIAL_AUTH_GOOGLE_OAUTH2_IGNORE_DEFAULT_SCOPE = True
-# SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-#     'https://www.googleapis.com/auth/plus.login',
-#     'https://www.googleapis.com/auth/userinfo.profile',
-#     'https://www.googleapis.com/auth/userinfo.email',
-#     'https://www.googleapis.com/auth/user.phonenumbers.read',
-# ]

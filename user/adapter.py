@@ -4,9 +4,7 @@ import requests
 from allauth.account.adapter import DefaultAccountAdapter
 
 class MyAccountAdapter(DefaultAccountAdapter):
-
     def get_login_redirect_url(self, request):
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         code = request.GET.get('code')
         url_auth = 'https://oauth2.googleapis.com/token'
         client_id = '1094555666329-b76moi8dkckmoe3vc9kb2qhf60r8t563.apps.googleusercontent.com'
@@ -20,6 +18,5 @@ class MyAccountAdapter(DefaultAccountAdapter):
         }
         response = requests.request("POST",url_auth,data=data)
         print(response.text)
-
         path = "/user/callback/google"
         return path.format()

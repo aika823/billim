@@ -19,9 +19,6 @@ client_id_kakao = 'afa386bd37692148a6c914da561c8458'
 billim_url = settings.BILLIM_URL
 image_url = settings.IMAGE_URL
 
-# def home(request):
-#     return render(request, 'home.html')
-
 def index(request):
     return render(request, 'index.html', { 'email': request.session.get('user') })
 
@@ -30,26 +27,41 @@ def logout(request):
         del(request.session['user'])
     return redirect('/')
 
-def callback_google123(request):
-    print("callback_google123 function")
-    url ='https://accounts.google.com/o/oauth2/auth/identifier'
-    redirect_uri = 'http://localhost:8000/user/callback/google/login'
-    google_auth_api = "https://accounts.google.com/o/oauth2/v2/auth"
-    client_id = '1094555666329-b76moi8dkckmoe3vc9kb2qhf60r8t563.apps.googleusercontent.com'
-    scope = "https://www.googleapis.com/auth/userinfo.email "+"https://www.googleapis.com/auth/userinfo.profile"
-
-    params = {
-        'client_id':client_id,
-        'redirect_uri': redirect_uri,
-        'scope':scope,
-        'response_type':'code',
-        'state':'LW3T3VwQn30o',
-        'flowName':'GeneralOAuthFlow'
+def login_social(request, type):
+    url_auth = {
+        'naver' : "https://nid.naver.com/oauth2.0/authorize",
+        'kakao' : "https://kauth.kakao.com/oauth/authorize",
+        'google': "https://accounts.google.com/o/oauth2/v2/auth"
     }
-    
-    response = redirect( f"{google_auth_api}?client_id={client_id}&response_type=code&redirect_uri={redirect_uri}&scope={scope}" ) 
+    response_type = {
+        'naver' : 'code',
+        'kakao' : 'code',
+        'google': 'code'
+    }
+    client_id = {
+        'naver' : 'WO73y3DTPypJ9B7qq56N',
+        'kakao' : 'afa386bd37692148a6c914da561c8458',
+        'google': '1094555666329-b76moi8dkckmoe3vc9kb2qhf60r8t563.apps.googleusercontent.com'
+    }
+    redirect_uri = {
+        'naver' : 'http://localhost:8000/user/callback/naver/',
+        'kakao' : 'http://localhost:8000/user/callback/kakao',
+        'google': 'http://localhost:8000/user/callback/google/login'
+    }
+    scope={
+        'naver' : None,
+        'kakao' : None,
+        'google': "https://www.googleapis.com/auth/userinfo.email "+"https://www.googleapis.com/auth/userinfo.profile"
+    }
+    state = {
+        'naver' : '7a74649e-d714-438f-a3fc-991c8b6f4bc7',
+        'kakao' : None,
+        'google': None
+    }
+    str_auth = f"{url_auth[type]}?response_type={response_type[type]}&client_id={client_id[type]}&redirect_uri={redirect_uri[type]}&state={state[type]}"
+    if scope[type]: str_auth += "&scope={}".format(scope[type])
+    response = redirect(str_auth)
     return response
-
     
 def callback_google(request):
     # 인증 요청
@@ -72,13 +84,6 @@ def callback_google(request):
     # 유저 정보 조회
     url_user_info = "https://www.googleapis.com/oauth2/v3/userinfo"
     user_info = requests.request("GET", url_user_info, params={ 'access_token': access_token }).json()
-    
-    # url_user_info = "https://www.googleapis.com/oauth2/v3/tokeninfo"
-    # user_info = requests.request("GET", url_user_info, params={ 'id_token': response['id_token'] }).json()
-
-    # url_user_info = "https://www.googleapis.com/userinfo/v2/me"
-    # user_info = requests.request("GET", url_user_info, params={ 'access_token': access_token }).json()
-
     print(user_info)
     return render(request, 'home.html')
 

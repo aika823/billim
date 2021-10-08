@@ -69,20 +69,14 @@
       <button type="submit" class="btn btn-primary">로그인</button>
       <button type="button" class="btn btn-primary btn-block" onclick="location.href='/user/register'">회원가입</button>
     </form>
-    <button onclick="location.href='https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=WO73y3DTPypJ9B7qq56N&redirect_uri={{url}}/user/callback/naver/&state=7a74649e-d714-438f-a3fc-991c8b6f4bc7'">
+    <button onclick="location.href='/user/login/naver'">
       네이버 로그인 버튼
     </button>
-    <button onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=afa386bd37692148a6c914da561c8458&redirect_uri={{url}}/user/callback/kakao&response_type=code'">
+    <button onclick="location.href='/user/login/kakao'">
       카카오 로그인 버튼
     </button>
-    <button onclick="location.href='https://accounts.google.com/o/oauth2/auth/identifier?client_id=1094555666329-b76moi8dkckmoe3vc9kb2qhf60r8t563.apps.googleusercontent.com&redirect_uri=http://localhost:8000/user/callback/google/login&scope=https://www.googleapis.com/auth/userinfo.profile&response_type=code&state=LW3T3VwQn30o&flowName=GeneralOAuthFlow'">
+    <button onclick="location.href='/user/login/google'">
       구글 로그인 버튼
-    </button>
-    <button onclick="location.href='/user/callback/google'">
-      구글 로그인 버튼2
-    </button>
-    <button onclick="location.href='/user/callback/google123'">
-      구글 로그인 버튼2
     </button>
   </div>
 </div>

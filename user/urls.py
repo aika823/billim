@@ -13,18 +13,15 @@ from django.urls import path, include  # new
 
 
 urlpatterns = [
-    url('callback/google/', views.callback_google, name="custom_login" ),
-    url('callback/google123/', views.callback_google123, name="custom_login" ),
-
-    url('callback/google/login', views.callback_google, name="custom_login" ),
-
-    # url('callback/google/', SignupView.as_view(), name="custom_singup" ),
-    # url('callback/google/auth', views.callback_google, name="custom_singup" ),
-    
     path('', views.login),
+
+    path('login/', views.login),    
+    path('login/<str:type>/', views.login_social, name="custom_login" ),
+
     path('register/', views.create),
-    path('login/', views.login),
     path('logout/', views.logout),
+
+    path('callback/google/login', views.callback_google, name="custom_login" ),
     path('callback/kakao/', views.callback_kakao),
     path('callback/naver/', views.callback_naver),
 ]
