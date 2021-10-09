@@ -44,9 +44,9 @@ def login_social(request, type):
         'google': '1094555666329-b76moi8dkckmoe3vc9kb2qhf60r8t563.apps.googleusercontent.com'
     }
     redirect_uri = {
-        'naver' : 'http://localhost:8000/user/callback/naver/',
-        'kakao' : 'http://localhost:8000/user/callback/kakao',
-        'google': 'http://localhost:8000/user/callback/google/login'
+        'naver' : billim_url+'/user/callback/naver/',
+        'kakao' : billim_url+'/user/callback/kakao',
+        'google': billim_url+'/user/callback/google'
     }
     scope={
         'naver' : None,
@@ -63,25 +63,114 @@ def login_social(request, type):
     response = redirect(str_auth)
     return response
     
-def callback_google(request):
-    # 인증 요청
+def callback_social(request, type):    
+    
+    # 생성된 코드를 통해 유저 인증 진행
     code = request.GET.get('code')    
-    url_auth = 'https://oauth2.googleapis.com/token'
-    client_id = '1094555666329-b76moi8dkckmoe3vc9kb2qhf60r8t563.apps.googleusercontent.com'
-    client_secret = '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'
-    scope = "https://www.googleapis.com/auth/userinfo.profile"
+    url_auth = {
+        'google': 'https://oauth2.googleapis.com/token',
+        'naver' : 'https://nid.naver.com/oauth2.0/token',
+        'kakao' : 'https://kauth.kakao.com/oauth/token'  
+    }
+    client_id={
+        'google': '1094555666329-b76moi8dkckmoe3vc9kb2qhf60r8t563.apps.googleusercontent.com',
+        'naver' : "WO73y3DTPypJ9B7qq56N",
+        'kakao' : '8697dec0f53599c5d7f2502389d16f72'
+    }
+    client_secret={
+        'google': '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', #구글
+        'naver' : "SOUKrwtgel", #네이버
+    }
+    scope={
+        'google': "https://www.googleapis.com/auth/userinfo.profile"
+    }
+    state={
+        'naver' : "REWERWERTATE"
+    }
+    redirect_uri = {
+        'google': billim_url+'/user/callback/google',
+        'naver' : billim_url+'/user/callback/naver',
+        'kakao' : billim_url+'/user/callback/kakao',
+    }
+    if type == 'naver':
+        clientConnect = client_id[type] + ":" + client_secret[type]
+        clidst_base64 = base64.b64encode(bytes(clientConnect, "utf8")).decode()
+        headers = {"Authorization": "Basic "+clidst_base64}
+    else:
+        headers = None
+        
     data = {
         "grant_type":'authorization_code',
-        'client_id':client_id,
-        'client_secret':client_secret,
-        'redirect_uri':'http://localhost:8000/user/callback/google/login',
-        'code':str(code),
-        'scope':scope,
+        'client_id':client_id[type],
+        'redirect_uri':redirect_uri[type],
+        'code':code,
     }
-    response = requests.request("POST",url_auth,data=data).json()
-    access_token = response['access_token'] 
+    if type in client_secret:
+        data['client_secret'] = client_secret[type]
+    if type in scope:
+         data['scope'] = scope[type] 
+    if type in state:
+        data['state'] = state[type] 
+    response = requests.request("POST", url_auth[type], data=data,headers=headers).json()
     
-    # 유저 정보 조회
+    # 액세스 토큰 발급
+    access_token = response['access_token'] 
+
+    # 액세스 토큰을 통해 유저 정보 요청
+    if type == 'google':
+        url_user_info = "https://www.googleapis.com/oauth2/v3/userinfo"
+        user_response = requests.request("POST", url_user_info, params={'access_token': access_token }).json()
+        username = user_response['email']
+        email = user_response['email']
+        social_id = user_response['sub']
+
+    elif type == 'naver':
+        url_user_info = "https://openapi.naver.com/v1/nid/me"
+        header = {'Authorization':"Bearer " + access_token}
+        user_response = requests.request("POST", url_user_info, headers=header).json()
+        username = user_response['response']['name']
+        email = user_response['response']['email']
+        social_id = user_response['response']['id']
+    
+    elif type == 'kakao':
+        url_user_info = "https://kapi.kakao.com/v2/user/me"
+        header = {'Authorization':"Bearer " + access_token}
+        user_response = requests.request("POST", url_user_info, headers=header, verify=False).json()
+        username = user_response['kakao_account']['profile']['nickname'] #카카오
+        email = user_response['kakao_account']['email']
+        social_id = user_response['id']
+
+    # 유저 정보
+    user_info = {
+        'username': username,
+        'email': email,
+        'social_id': social_id
+    }
+    
+    # DB에서 중복여부 확인 후 유저 정보 저장            
+    if User.objects.filter(social_id=social_id):
+        user_info['중복여부'] = '중복입니당'+str(social_id)
+        user_info['test'] = User.objects.filter(social_id=social_id)
+        user = User.objects.get(social_id=social_id)
+    else:
+        user_info['중복여부'] = '중복이 아니라 DB에 추가해써여'
+        user = User(
+                    username=username,
+                    email=email,
+                    password=None,
+                    social_login=type,
+                    social_id = social_id
+                )
+        user.save()
+
+    # 소셜 로그인 후 홈페이지로 이동
+    request.session['user'] = user.id
+    return render(request, 'home.html', {'test': user_info})
+
+
+    
+
+def callback_google(request):  
     url_user_info = "https://www.googleapis.com/oauth2/v3/userinfo"
     user_info = requests.request("GET", url_user_info, params={ 'access_token': access_token }).json()
     print(user_info)
@@ -89,27 +178,6 @@ def callback_google(request):
 
 
 def callback_naver(request):
-    # 인증 요청
-    code = request.GET.get('code')    
-    url_auth = 'https://nid.naver.com/oauth2.0/token/'
-    redirect_uri= billim_url+'/user/callback/naver'
-    client_id ="WO73y3DTPypJ9B7qq56N"
-    client_secret = "SOUKrwtgel"
-    state = "REWERWERTATE"
-    clientConnect = client_id + ":" + client_secret
-    clidst_base64 = base64.b64encode(bytes(clientConnect, "utf8")).decode()
-    headers = {"Authorization": "Basic "+clidst_base64}
-    data = {
-        "grant_type":'authorization_code',
-        'client_id':client_id,
-        'client_secret':client_secret,
-        'redirect_uri':redirect_uri,
-        'code':code,
-        'state':state,
-    }
-    response = requests.request("POST",url_auth,data=data,headers=headers).json()
-    access_token = response['access_token']
-
     # 유저 정보 조회
     url_user_info = "https://openapi.naver.com/v1/nid/me"
     user_header = {'Authorization':"Bearer " + access_token}
@@ -130,18 +198,6 @@ def callback_naver(request):
     return render(request, 'home.html', {'test': user_info, 'code':code, 'access_token':access_token})
 
 def callback_kakao(request):
-    # 인증 요청
-    url_auth = 'https://kauth.kakao.com/oauth/token'  
-    code = request.GET.get('code')
-    data = {
-        'grant_type' : 'authorization_code',
-        'client_id' : '8697dec0f53599c5d7f2502389d16f72',
-        'redirect_uri' : billim_url+'/user/callback/kakao',
-        'code' : code,
-    }
-    response = requests.request("POST", url_auth, data=data, verify=False).json()
-    access_token = response['access_token']
-    
     # 유저 정보 조회
     url_user_info = 'https://kapi.kakao.com/v2/user/me'
     my_token = 'Bearer '+str(access_token)
@@ -149,7 +205,6 @@ def callback_kakao(request):
     user_info = requests.request("POST", url_user_info, headers=header, verify=False).json()
     username = user_info['kakao_account']['profile']['nickname']
     email = user_info['kakao_account']['email']
-    
     # DB에 추가
     user = User(
                 username=username,
