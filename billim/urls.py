@@ -52,16 +52,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
 
-
-
     path('api/', include('rest_framework.urls')),  # new
     path('baton/', include('baton.urls')),
     
     path('', include('user.urls')),  # new
     path('user/', include('user.urls')),
     
-    # path('logout/', logout),
-    # path('login/', LoginView.as_view()),
     
     path('board/', include('board.urls')),
 

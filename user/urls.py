@@ -14,12 +14,8 @@ from django.urls import path, include  # new
 
 urlpatterns = [
     path('', views.login),
-
     path('login/', views.login),    
     path('login/<str:type>/', views.login_social),
     path('callback/<str:type>/', views.callback_social),
-
-    path('register/', views.create),
     path('logout/', views.logout),
-    
 ]

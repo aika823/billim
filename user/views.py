@@ -7,6 +7,9 @@ from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
 from django.views.generic.edit import FormView
 from django.conf import settings
+from requests.sessions import session
+
+from product.models import Product
 
 from .forms import RegisterForm
 from .forms import LoginForm, RegisterForm
@@ -147,13 +150,11 @@ def callback_social(request, type):
         'social_id': social_id
     }
     
-    # DB에서 중복여부 확인 후 유저 정보 저장            
-    if User.objects.filter(social_id=social_id):
-        user_info['중복여부'] = '중복입니당'+str(social_id)
-        user_info['test'] = User.objects.filter(social_id=social_id)
-        user = User.objects.get(social_id=social_id)
+    # DB에서 중복여부 확인 후 유저 정보 저장 
+    user_in_db = User.objects.get(social_id=social_id)
+    if user_in_db:
+        user = user_in_db
     else:
-        user_info['중복여부'] = '중복이 아니라 DB에 추가해써여'
         user = User(
                     username=username,
                     email=email,
@@ -165,87 +166,29 @@ def callback_social(request, type):
 
     # 소셜 로그인 후 홈페이지로 이동
     request.session['user'] = user.id
-    return render(request, 'home.html', {'test': user_info})
-
-
-    
-
-def callback_google(request):  
-    url_user_info = "https://www.googleapis.com/oauth2/v3/userinfo"
-    user_info = requests.request("GET", url_user_info, params={ 'access_token': access_token }).json()
-    print(user_info)
-    return render(request, 'home.html')
-
-
-def callback_naver(request):
-    # 유저 정보 조회
-    url_user_info = "https://openapi.naver.com/v1/nid/me"
-    user_header = {'Authorization':"Bearer " + access_token}
-    user_info = requests.request("POST", url_user_info, headers=user_header).json()
-    username = user_info['response']['name']
-    email = user_info['response']['email']
-
-    # DB에 추가
-    user = User(
-                username=username,
-                email=email,
-                password=None,
-                social_login='naver'
-            )
-    user.save()
-    # 네이버 로그인 성공 
-    request.session['user'] = user.id
-    return render(request, 'home.html', {'test': user_info, 'code':code, 'access_token':access_token})
-
-def callback_kakao(request):
-    # 유저 정보 조회
-    url_user_info = 'https://kapi.kakao.com/v2/user/me'
-    my_token = 'Bearer '+str(access_token)
-    header = {'Authorization': my_token}
-    user_info = requests.request("POST", url_user_info, headers=header, verify=False).json()
-    username = user_info['kakao_account']['profile']['nickname']
-    email = user_info['kakao_account']['email']
-    # DB에 추가
-    user = User(
-                username=username,
-                email=email,
-                password=None,
-                social_login='kakao'
-            )
-    user.save()
-    
-    # 카카오 로그인 성공 
-    request.session['user'] = user.id
-    return render(request, 'home.html', {'test': user_info, 'code':code, 'access_token':access_token})
+    # return render(request, 'home.html', {'test': user_info})
+    return redirect('/')
 
 def login(request):
+    # 로그인 폼 제출 시
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
             request.session['user'] = form.user_id
-            # username = User.objects.values('username')
             username = User.objects.filter(id=form.user_id).values('username')[0]['username']
             image_src = str(User.objects.filter(id=form.user_id).values('image')[0]['image'])
-            # username = User.objects
-
             return render(request, 'home.html', {'username':username, 'image_src':image_src})
     else:
-        form = LoginForm()
-    return render(request, 'login.html', {'form': form, 'url':billim_url})
-
-def create(request):
-    if(request.method == 'POST'):
-        user = User()
-        user.username=request.POST['username']
-        user.email=request.POST['email']
-        user.password=make_password(request.POST['password'])
-        user.image = request.FILES.get('image')
-        user.save()
-        user.image = '{}{}'.format(image_url,user.image) # Save full url in database
-        user.save()
-        return redirect('/user/login')
-    else:
-        return render(request, 'register.html', {'form':RegisterForm})
+        # 로그인 된 경우
+        if 'user' in request.session: 
+            user = User.objects.get(id=request.session['user'])
+            form = None
+        # 로그인 안 된 경우
+        else: 
+            user = None
+            form = LoginForm()
+        products = Product.objects.all()
+    return render(request, 'login.html', {'form': form, 'user':user, 'products':products})
 
 class LoginView(FormView):
     template_name = 'login.html'

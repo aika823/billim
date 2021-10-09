@@ -54,6 +54,5 @@ def board_list(request):
     all_boards = Board.objects.all().order_by('-id')
     page = int(request.GET.get('p', 1))
     paginator = Paginator(all_boards, 3)
-
     boards = paginator.get_page(page)
     return render(request, 'board_list.html', {'boards': boards})

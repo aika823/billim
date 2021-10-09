@@ -19,8 +19,10 @@
   }
   $(document).ready(function () {});
 </script>
+
 {% endblock %}
 {% block contents %}
+
 <div class="row mt-5">
   <div class="col-12">
     <table class="table table-light">
@@ -33,11 +35,13 @@
         </tr>
       </thead>
       <tbody class="text-dark">
-        {% for product in product_list %}
+        {% for product in products %}
         <tr>
           <th scope="row">{{ product.id }}</th>
-          <th><a id="product-{{ product.id }}" onmouseenter="product_detail({{ product.id }});"
-              onmouseleave="product_leave({{ product.id }});" href="/product/{{ product.id }}">{{ product.name }}</a>
+          <th>
+            <a id="product-{{ product.id }}" href="/product/{{ product.id }}">
+              {{ product.name }}
+            </a>
           </th>
           <th>{{ product.price|intcomma }} 원</th>
           <th>{{ product.register_date|date:'Y-m-d H:i' }}</th>
@@ -47,6 +51,7 @@
     </table>
   </div>
 </div>
+
 <div class="row mt-5">
   {% if is_paginated %}
   <ul class="pagination">

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
@@ -10,6 +11,9 @@ from .models import Product
 from .forms import RegisterForm
 from .serializers import ProductSerializer
 from order.forms import RegisterForm as OrderForm
+
+image_url = settings.IMAGE_URL
+
 
 class ProductListAPI(generics.GenericAPIView, mixins.ListModelMixin):
     serializer_class = ProductSerializer
@@ -43,6 +47,8 @@ def create(request):
         product.description=request.POST['description']
         product.stock=request.POST['stock']
         product.image =request.FILES.get('image')
+        product.save()
+        product.image = '{}/{}'.format(image_url,product.image) # Save full url in database
         product.save()
         return redirect('/product/')
     else:
