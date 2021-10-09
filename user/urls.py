@@ -16,12 +16,10 @@ urlpatterns = [
     path('', views.login),
 
     path('login/', views.login),    
-    path('login/<str:type>/', views.login_social, name="custom_login" ),
+    path('login/<str:type>/', views.login_social),
+    path('callback/<str:type>/', views.callback_social),
 
     path('register/', views.create),
     path('logout/', views.logout),
-
-    path('callback/google/login', views.callback_google, name="custom_login" ),
-    path('callback/kakao/', views.callback_kakao),
-    path('callback/naver/', views.callback_naver),
+    
 ]
