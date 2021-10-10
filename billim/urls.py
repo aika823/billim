@@ -48,29 +48,23 @@ urlpatterns = [
         TemplateView.as_view(template_name='admin/manual.html',
         extra_context={'title': '매뉴얼', 'site_title': '패스트캠퍼스', 'site_header': '패스트캠퍼스'})
     ),
-
+    
+    path('', include('user.urls')),
     path('admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),
-
-    path('api/', include('rest_framework.urls')),  # new
+    # path('accounts/', include('allauth.urls')),
+    path('api/', include('rest_framework.urls')),
+    path('api/product/', ProductListAPI.as_view()),
+    path('api/product/<int:pk>/', ProductDetailAPI.as_view()),
     path('baton/', include('baton.urls')),
-    
-    path('', include('user.urls')),  # new
-    path('user/', include('user.urls')),
-    
-    
     path('board/', include('board.urls')),
-
+    path('order/', OrderList.as_view()),
+    path('order/create/', OrderCreate.as_view()),
     path('product/', ProductList.as_view()),
     path('product/<int:pk>/', ProductDetail.as_view()),
     path('product/create/', create),
     # path('product/create/', ProductCreate.as_view()),
-
-    path('order/', OrderList.as_view()),
-    path('order/create/', OrderCreate.as_view()),
-
-    path('api/product/', ProductListAPI.as_view()),
-    path('api/product/<int:pk>/', ProductDetailAPI.as_view())
+    path('seller/', include('seller.urls')),
+    path('user/', include('user.urls')),
 ]
 
 if settings.DEBUG:

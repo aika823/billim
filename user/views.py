@@ -10,6 +10,7 @@ from django.conf import settings
 from requests.sessions import session
 
 from product.models import Product
+from seller.models import Seller
 
 from .forms import RegisterForm
 from .forms import LoginForm, RegisterForm
@@ -182,13 +183,24 @@ def login(request):
         # 로그인 된 경우
         if 'user' in request.session: 
             user = User.objects.get(id=request.session['user'])
+            try:
+                seller = Seller.objects.get(user_id=user)
+            except Seller.DoesNotExist:
+                seller = None
             form = None
         # 로그인 안 된 경우
         else: 
             user = None
+            seller = None
             form = LoginForm()
         products = Product.objects.all()
-    return render(request, 'login.html', {'form': form, 'user':user, 'products':products})
+    
+    return render(request, 'login.html', {
+        'form': form, 
+        'user':user, 
+        'seller': seller,
+        'products':products
+    })
 
 class LoginView(FormView):
     template_name = 'login.html'

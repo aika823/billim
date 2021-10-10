@@ -97,6 +97,7 @@ INSTALLED_APPS = [
     'board',
     'tag',
     'storages',
+    'seller',
 ]
 
 MIDDLEWARE = [
