@@ -19,9 +19,14 @@
   }
   $(document).ready(function () {});
 </script>
-
 {% endblock %}
+
+
 {% block contents %}
+
+{% if seller %}
+  <h1>환영합니다 셀러님</h1>
+{% endif %}
 
 <div class="row mt-5">
   <div class="col-12">

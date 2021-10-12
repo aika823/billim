@@ -1,5 +1,7 @@
 import requests
 import datetime
+import string
+import random
 
 def get_exchange():
     today = datetime.datetime.now()
@@ -19,3 +21,10 @@ def get_exchange():
         if d['cur_unit'] == 'USD':
             return d['tts']
     return 
+
+def get_random(digit):
+    string_pool = string.ascii_letters + string.digits
+    result = ""
+    for _ in range(digit):
+        result += random.choice(string_pool)
+    return result

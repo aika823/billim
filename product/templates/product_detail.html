@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load humanize %}
+
 {% block contents %}
+
+{{product}}
+
 <div class="row mt-5">
   <div class="col-12">
     <div class="card" style="width: 100%;">
@@ -11,6 +15,7 @@
         <li class="list-group-item">
           <form method="POST" action="/order/create/">
             {% csrf_token %}
+
             {% for field in form %}
               <div class="form-group">
                 {% ifnotequal field.name 'product' %}
@@ -24,16 +29,23 @@
                 <span style="color: red">{{ field.errors }}</span>
               {% endif %}
             {% endfor %}
+
             <button type="submit" class="btn btn-primary">주문하기</button>
           </form>
         </li>
+
         <li class="list-group-item">가격: {{ product.price|intcomma }} 원</li>
         <li class="list-group-item">등록날짜: {{ product.register_date|date:'Y-m-d H:i' }}</li>
         <li class="list-group-item">재고: {{ product.stock|intcomma }} 개</li>
         <li class="list-group-item">{{ product.description|safe }}</li> 
-        <li class="list-group-item">{{ product.image|safe }}</li> 
-        <li class="list-group-item">
-          <img class="fit-picture" src="http://static.billim.co.kr/{{ product.image|safe }}"></li>
+      
+        {% for image in images %}
+          <li class="list-group-item">
+            <img class="fit-picture" src="{{ image.image|safe }}">
+          </li>
+        {% endfor %}
+        
+        
       </ul>
     </div>
   </div>

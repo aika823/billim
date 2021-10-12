@@ -1,12 +1,14 @@
 from django.conf import settings
+from django.forms.fields import ImageField
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
+from order.models import Order
 from rest_framework import generics
 from rest_framework import mixins
 
-from .models import Product
+from .models import Product, ProductImage
 from .forms import RegisterForm
 from .serializers import ProductSerializer
 
@@ -54,6 +56,20 @@ class ProductDetail(DetailView):
         context['form'] = OrderForm(self.request)
         return context
 
+def product_detail(request, product_id):
+    product = Product.objects.get(id=product_id)
+    images = ProductImage.objects.filter(product_id=product)
+    form = OrderForm
+    return render(request, 'product_detail.html', 
+        {
+            'product': product,
+            'images': images,
+            'form': form
+        }
+    )
+
+
+
 
 def create(request):
 
@@ -66,6 +82,7 @@ def create(request):
 
     # 셀러 상품 등록 로직
     if (request.method == 'POST') & (seller is not None):
+
         product = Product()
         product.name = request.POST['name']
         product.price = request.POST['price']
@@ -74,10 +91,16 @@ def create(request):
         product.seller_id = seller
         product.image = request.FILES.get('image')
         product.save()
-        # Save full image url in database
-        product.image = '{}/{}'.format(image_url, product.image)
-        product.save()
-        return redirect('/product/')
+
+        for img in request.FILES.getlist('images'):
+            product_image = ProductImage()
+            product_image.product_id = product  
+            product_image.image = img
+            product_image.save()
+            product_image.image = '{}/{}'.format(image_url, product_image.image)    
+            product_image.save()
+        
+        return redirect('/product/'+str(product.id))
 
     # 셀러 상품 등록 페이지
     else:
