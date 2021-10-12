@@ -89,8 +89,15 @@ def create(request):
         product.description = request.POST['description']
         product.stock = request.POST['stock']
         product.seller_id = seller
-        product.image = request.FILES.get('image')
         product.save()
+
+        thumbnail_image = ProductImage()
+        thumbnail_image.product_id = product
+        thumbnail_image.image = request.FILES.get('thumbnail_image')
+        thumbnail_image.thumbnail = True
+        thumbnail_image.save()
+        thumbnail_image.image = '{}/{}'.format(image_url, thumbnail_image.image)    
+        thumbnail_image.save()
 
         for img in request.FILES.getlist('images'):
             product_image = ProductImage()

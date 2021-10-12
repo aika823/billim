@@ -11,7 +11,7 @@ image_url = settings.IMAGE_URL
 
 class SellerProductList(ListView):
     model = Product
-    template_name = 'product.html'
+    template_name = 'seller_product.html'
     context_object_name = 'products'
     paginate_by = 10
         

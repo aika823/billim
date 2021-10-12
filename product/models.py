@@ -21,14 +21,11 @@ class Product(models.Model):
     seller_id       = models.ForeignKey(to='seller.Seller',db_column='seller_id', on_delete=models.RESTRICT, null=True)
     category_id     = models.ForeignKey(to='product.ProductCategory',db_column='category_id', on_delete=models.RESTRICT, null=True)
     subcategory_id  = models.ForeignKey(to='product.ProductSubcategory',db_column='subcategory_id', on_delete=models.RESTRICT, null=True)
-    # image_id        = models.ForeignKey(to='product.ProductImage',db_column='image_id', on_delete=models.RESTRICT, null=True)
-    # image           = models.ImageField(upload_to=PathAndRename("product/"),blank=True, null=True)    
     name            = models.CharField(max_length=256, verbose_name='상품명')
     price           = models.IntegerField(verbose_name='상품가격')
     description     = models.TextField(verbose_name='상품설명')
     stock           = models.IntegerField(verbose_name='재고')
     register_date   = models.DateTimeField(auto_now_add=True, verbose_name='등록날짜')
-    
 
     def __str__(self):
         return self.name
@@ -39,10 +36,16 @@ class Product(models.Model):
         verbose_name_plural = '상품입니다'
 
 class ProductImage(models.Model):
-    product_id = models.ForeignKey(to='product.Product', db_column='product_id', on_delete=models.RESTRICT)
+    product_id = models.ForeignKey(to='product.Product', db_column='product_id', on_delete=models.SET_NULL, null=True, default=None)
     image = models.ImageField(upload_to=PathAndRename("product/"),blank=True, null=True)
-    thumbnail = models.BooleanField
+    thumbnail = models.BooleanField(null=True, default=None)
     order = int
+
+    def __str__(self):
+        return str(self.image)
+
+    class Meta:
+        db_table = 'product_image'
 
 class ProductCategory(models.Model):
     product_id = models.ForeignKey(to='product.Product', db_column='product_id', on_delete=models.RESTRICT)

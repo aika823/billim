@@ -20,18 +20,16 @@ class RegisterForm(forms.Form):
         error_messages={'required': '재고를 입력해주세요.'}, 
         label='재고'
     )
-
+    thumbnail_image = forms.ImageField(
+        error_messages={'required': '썸네일 이미지를 입력해주세요.'}, 
+        label='썸네일 이미지'
+    )
     images = forms.FileField(
         widget=forms.ClearableFileInput(
             attrs={'multiple': True, 'class':'adjasfkajsdklj'}
         ),
         label='여러 개의 이미지'
     )
-
-    # image = forms.ImageField(
-    #     error_messages={'required': '이미지를 입력해주세요.'}, 
-    #     label='이미지'
-    # )
 
     def clean(self):
         cleaned_data = super().clean()

@@ -1,5 +1,8 @@
 import json
 from os import access
+from django.db.models.expressions import F, Case, When
+from django.db.models.fields import CharField
+from django.db.models.query_utils import Q, FilteredRelation
 import requests
 import base64
 
@@ -9,7 +12,7 @@ from django.views.generic.edit import FormView
 from django.conf import settings
 from requests.sessions import session
 
-from product.models import Product
+from product.models import Product, ProductImage
 from seller.models import Seller
 
 from .forms import RegisterForm
@@ -193,13 +196,22 @@ def login(request):
             user = None
             seller = None
             form = LoginForm()
-        products = Product.objects.all()
-    
+        
+        products = Product.objects.annotate(
+            image = Case(
+                When(
+                    productimage__thumbnail=True, 
+                    then=F('productimage__image')
+                ),
+                output_field=CharField()
+            )
+        ).distinct()
+
     return render(request, 'login.html', {
         'form': form, 
         'user':user, 
         'seller': seller,
-        'products':products
+        'products':products, 
     })
 
 class LoginView(FormView):
