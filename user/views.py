@@ -199,13 +199,12 @@ def login(request):
         
         products = Product.objects.annotate(
             image = Case(
-                When(
-                    productimage__thumbnail=True, 
-                    then=F('productimage__image')
-                ),
+                When(productimage__thumbnail=True, then=F('productimage__image')),
                 output_field=CharField()
             )
-        ).distinct()
+        ).filter(image__isnull = False)
+
+        print(products.query)
 
     return render(request, 'login.html', {
         'form': form, 

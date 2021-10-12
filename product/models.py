@@ -48,8 +48,8 @@ class ProductImage(models.Model):
         db_table = 'product_image'
 
 class ProductCategory(models.Model):
-    product_id = models.ForeignKey(to='product.Product', db_column='product_id', on_delete=models.RESTRICT)
+    product_id = models.ForeignKey(to='product.Product', db_column='product_id', on_delete=models.SET_NULL, null=True, default=None)
     category = models.CharField(max_length=16)
 
 class ProductSubcategory(models.Model):
-    product_id = models.ForeignKey(to='product.Product', db_column='product_id', on_delete=models.RESTRICT)
+    product_id = models.ForeignKey(to='product.Product', db_column='product_id', on_delete=models.SET_NULL, null=True, default=None)
