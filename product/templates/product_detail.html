@@ -11,6 +11,23 @@
         <h5 class="card-title">상품명: {{ product.name }}</h5>
         <h5 class="card-title">카테고리: {{ category.category }}</h5>
         <h5 class="card-title">상세 카테고리: {{ subcategory.category }}</h5>
+
+
+
+        {% if bookmark.bookmark %}
+        <form method="POST" action="bookmark/">
+          {% csrf_token %}
+          <input type="hidden" name='bookmarkd' value="0">
+          <button type="submit" class="btn btn-primary">북마크 해제하기</button>
+        </form>
+        {% else %}
+        <form method="POST" action="bookmark/">
+          {% csrf_token %}  
+          <input type="hidden" name='bookmark' value="1">
+          <button type="submit" class="btn btn-primary">북마크 하기</button>
+        </form>
+        {% endif %}
+
       </div>
       
       <ul class="list-group list-group-flush">

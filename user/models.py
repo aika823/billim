@@ -1,6 +1,7 @@
 from django.db import models
 import datetime
 import os
+from django.db.models.base import Model
 from django.utils.deconstruct import deconstructible
 
 @deconstructible
@@ -13,6 +14,15 @@ class PathAndRename(object):
         date_time = now.strftime("%y%m%d_%H%M%S")
         filename = 'img_product_{}.{}'.format(str(date_time), str(ext))
         return os.path.join(self.path, filename)
+
+class Bookmark(models.Model):
+    user = models.ForeignKey(to='user.User', db_column='user_id', null=True, default=None, on_delete=models.SET_NULL)
+    product = models.ForeignKey(to='product.Product', db_column='product_id', null=True, default=None, on_delete=models.SET_NULL)
+    bookmark = models.BooleanField(null=False, default=False)
+    class Meta:
+        db_table = 'bookmark'
+
+
 
 class User(models.Model):
     username = models.CharField(max_length=32, verbose_name='사용자명')

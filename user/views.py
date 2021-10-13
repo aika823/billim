@@ -170,7 +170,13 @@ def callback_social(request, type):
 
     # 소셜 로그인 후 홈페이지로 이동
     request.session['user'] = user.id
-    request.session['user_obj'] = user
+
+    
+    # request.session['user_obj'] = user 
+    # 이거 넣고싶은데 안되네...
+
+
+
     # return render(request, 'home.html', {'test': user_info})
     return redirect('/')
 

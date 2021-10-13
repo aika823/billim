@@ -1,18 +1,16 @@
 from django.conf import settings
-from django.forms.fields import ImageField
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
 from order.models import Order
 from rest_framework import generics
 from rest_framework import mixins
 
-from .models import Category, Product, ProductCategory, ProductImage, Qna, Subcategory
+from .models import Product, ProductCategory, ProductImage, Qna
 from .forms import AnswerForm, ProductRegisterForm, QuestionForm
 from .serializers import ProductSerializer
 
-from user.models import User
+from user.models import Bookmark, User
 from seller.models import Seller
 from order.forms import RegisterForm as OrderForm
 
@@ -58,9 +56,14 @@ class ProductDetail(DetailView):
 
 
 def product_detail(request, product_id):
+    user_id = request.session.get('user')
     product = Product.objects.get(id=product_id)
     images = ProductImage.objects.filter(product_id=product_id)
     product_category = product.category_id
+    try:
+         bookmark = Bookmark.objects.get(product_id=product_id, user_id=user_id)
+    except:
+        bookmark  = None
     context = {
         'product': product,
         'images': images,
@@ -69,9 +72,33 @@ def product_detail(request, product_id):
         'answer_form': AnswerForm,
         'category': product_category.category_id,
         'subcategory': product_category.subcategory_id,
-        'qna_list': Qna.objects.filter(product_id=product_id)
+        'qna_list': Qna.objects.filter(product_id=product_id),
+        'bookmark': bookmark
     }
     return render(request, 'product_detail.html', context)
+
+
+def bookmark(request, product_id):
+    user_id = request.session.get('user')
+    try:
+        bookmark = Bookmark.objects.get(user_id=user_id, product_id=product_id)
+    except Bookmark.DoesNotExist:
+        bookmark = Bookmark()
+    
+    bookmark.product = Product.objects.get(id=product_id)
+    bookmark.user = User.objects.get(id=user_id)
+
+    if request.POST.get('bookmark') == '1':
+        print("북마크 하기")
+        bookmark.bookmark = True
+    else:
+        print(request.POST.get('bookmark'))
+        print("북마크 해제하기")
+        bookmark.bookmark = False
+    bookmark.save()    
+    return redirect(request.META['HTTP_REFERER'])
+    
+
 
 
 def create(request):
@@ -133,11 +160,14 @@ def create(request):
 def add_qna(request):
     user_id = request.session.get('user')
     if (request.method == 'POST'):
+        
         qna_id = request.POST.get('qna_id')
+        
         # 답변    
         if qna_id:
             qna = Qna.objects.get(id=qna_id)
             qna.answer = request.POST.get('answer')
+        
         # 질문
         else:
             qna = Qna()
@@ -145,6 +175,7 @@ def add_qna(request):
             qna.user_id = user_id
             qna.product_id = request.POST.get('product_id')
         
+        # 질문/답변 저장
         qna.save()
+
     return redirect(request.META['HTTP_REFERER'])
-        

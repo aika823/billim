@@ -25,6 +25,8 @@ class Product(models.Model):
     description     = models.TextField(verbose_name='상품설명')
     stock           = models.IntegerField(verbose_name='재고')
     register_date   = models.DateTimeField(auto_now_add=True, verbose_name='등록날짜')
+    grade           = models.IntegerField(null=True, default=None)
+    
 
     def __str__(self):
         return self.name
