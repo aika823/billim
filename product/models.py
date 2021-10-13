@@ -20,7 +20,6 @@ class PathAndRename(object):
 class Product(models.Model):
     seller_id       = models.ForeignKey(to='seller.Seller',db_column='seller_id', on_delete=models.RESTRICT, null=True)
     category_id     = models.ForeignKey(to='product.ProductCategory',db_column='category_id', on_delete=models.RESTRICT, null=True, default=None)
-    subcategory_id  = models.ForeignKey(to='product.ProductSubcategory',db_column='subcategory_id', on_delete=models.RESTRICT, null=True, default=None)
     name            = models.CharField(max_length=256, verbose_name='상품명')
     price           = models.IntegerField(verbose_name='상품가격')
     description     = models.TextField(verbose_name='상품설명')
@@ -40,22 +39,30 @@ class ProductImage(models.Model):
     image = models.ImageField(upload_to=PathAndRename("product/"),blank=True, null=True)
     thumbnail = models.BooleanField(null=True, default=None)
     order = int
-
-    def __str__(self):
+    def __id__(self):
         return str(self.image)
-
     class Meta:
         db_table = 'product_image'
 
+class Category(models.Model):
+    category = models.CharField(max_length=16, null=True, default=None)
+    def __id__(self):
+        return self.id
+    class Meta:
+        db_table = 'category'
+
+class Subcategory(models.Model):
+    category_id = models.ForeignKey(to='product.Category', db_column='category_id', on_delete=models.SET_NULL, null=True, default=None)
+    category = models.CharField(max_length=16, null=True, default=None)
+    def __id__(self):
+        return self.id
+    class Meta:
+        db_table = 'subcategory'
+
 class ProductCategory(models.Model):
-    product_id = models.ForeignKey(to='product.Product', db_column='product_id', on_delete=models.SET_NULL, null=True, default=None)
-    category = models.CharField(max_length=16)
+    category_id = models.ForeignKey(to='product.Category', db_column='category_id', on_delete=models.SET_NULL, null=True, default=None)
+    subcategory_id = models.ForeignKey(to='product.Subcategory', db_column='subcategory_id', on_delete=models.SET_NULL, null=True, default=None)
+    def __id__(self):
+        return self.id
     class Meta:
         db_table = 'product_category'
-
-class ProductSubcategory(models.Model):
-    product_id = models.ForeignKey(to='product.Product', db_column='product_id', on_delete=models.SET_NULL, null=True, default=None)
-    product_category_id = models.ForeignKey(to='product.ProductCategory', db_column='product_category_id', on_delete=models.SET_NULL, null=True, default=None)
-    category = models.CharField(max_length=16, null=True, default=None)
-    class Meta:
-        db_table = 'product_subcategory'

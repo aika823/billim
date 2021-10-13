@@ -1,5 +1,5 @@
 from django import forms
-from .models import ProductCategory, ProductSubcategory
+from .models import Category, Subcategory
 from django.db.models import Count
 
 # 카테고리 선택 폼
@@ -37,12 +37,12 @@ class ProductRegisterForm(forms.Form):
         label='여러 개의 이미지'
     )   
     category = CategoryChoiceField(
-        queryset = ProductCategory.objects.all().annotate(counter=Count('category')),
+        queryset = Category.objects.all().annotate(counter=Count('category')),
         error_messages={'required': '카테고리를 입력해주세요.'}, 
         label = '카테고리'
     )
     subcategory = CategoryChoiceField(
-        queryset = ProductSubcategory.objects.all().annotate(counter=Count('category')),
+        queryset = Subcategory.objects.all().annotate(counter=Count('category')),
         error_messages={'required': '세부 카테고리를 입력해주세요.'}, 
         label = '세부 카테고리'
     )

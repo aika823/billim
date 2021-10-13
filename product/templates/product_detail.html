@@ -6,16 +6,20 @@
 <div class="row mt-5">
   <div class="col-12">
     <div class="card" style="width: 100%;">
+      
       <div class="card-body">
         <h5 class="card-title">상품명: {{ product.name }}</h5>
         <h5 class="card-title">카테고리: {{ category.category }}</h5>
         <h5 class="card-title">상세 카테고리: {{ subcategory.category }}</h5>
       </div>
+      
       <ul class="list-group list-group-flush">
         <li class="list-group-item">가격: {{ product.price|intcomma }} 원</li>
         <li class="list-group-item">등록날짜: {{ product.register_date|date:'Y-m-d H:i' }}</li>
         <li class="list-group-item">재고: {{ product.stock|intcomma }} 개</li>
-        <li class="list-group-item">{{ product.description|safe }}</li> 
+        <li class="list-group-item">상품설명: {{ product.description|safe }}</li> 
+        <li class="list-group-item">셀러: {{ product.seller_id.name |safe }}</li> 
+        <li class="list-group-item"><img src="{{product.seller_id.image}}"></li> 
       
         {% for image in images %}
           <li class="list-group-item">

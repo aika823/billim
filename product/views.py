@@ -8,7 +8,7 @@ from order.models import Order
 from rest_framework import generics
 from rest_framework import mixins
 
-from .models import Product, ProductCategory, ProductImage, ProductSubcategory
+from .models import Category, Product, ProductCategory, ProductImage, Subcategory
 from .forms import ProductRegisterForm
 from .serializers import ProductSerializer
 
@@ -60,14 +60,9 @@ class ProductDetail(DetailView):
 def product_detail(request, product_id):
     product = Product.objects.get(id=product_id)
     images = ProductImage.objects.filter(product_id=product_id)
-    try:
-        category = ProductCategory.objects.get(product_id=product)
-    except ProductCategory.DoesNotExist:
-        category = None
-    try:
-        subcategory = ProductSubcategory.objects.get(product_id=product)
-    except ProductSubcategory.DoesNotExist:
-        subcategory = None
+    product_category_id = product.category_id
+    category = product_category_id.category_id
+    subcategory = product_category_id.subcategory_id
     form = OrderForm
     return render(
         request, 
@@ -95,14 +90,19 @@ def create(request):
     if (request.method == 'POST') & (seller is not None):
 
         # 상품 기본정보 저장
-        product = Product()
+        product = Product() 
         product.name = request.POST['name']
         product.price = request.POST['price']
         product.description = request.POST['description']
         product.stock = request.POST['stock']
         product.seller_id = seller
-        product.category_id_id = request.POST['category']
-        product.subcategory_id_id = request.POST['subcategory']
+        
+        # 카테고리 정보 저장
+        product_category = ProductCategory()
+        product_category.category_id_id = request.POST['category']
+        product_category.subcategory_id_id = request.POST['subcategory']
+        product_category.save()
+        product.category_id = product_category
         product.save()
 
         # 썸네일 이미지 저장
