@@ -1,8 +1,14 @@
 from django import forms
-from .models import Product
+from .models import ProductCategory, ProductSubcategory
+from django.db.models import Count
 
+# 카테고리 선택 폼
+class CategoryChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.category + ' ({})'.format(obj.counter)
 
-class RegisterForm(forms.Form):
+# 상품 입력 폼
+class ProductRegisterForm(forms.Form):
     name = forms.CharField(
         error_messages={'required': '상품명을 입력해주세요.'},
         max_length=64, 
@@ -29,6 +35,16 @@ class RegisterForm(forms.Form):
             attrs={'multiple': True, 'class':'adjasfkajsdklj'}
         ),
         label='여러 개의 이미지'
+    )   
+    category = CategoryChoiceField(
+        queryset = ProductCategory.objects.all().annotate(counter=Count('category')),
+        error_messages={'required': '카테고리를 입력해주세요.'}, 
+        label = '카테고리'
+    )
+    subcategory = CategoryChoiceField(
+        queryset = ProductSubcategory.objects.all().annotate(counter=Count('category')),
+        error_messages={'required': '세부 카테고리를 입력해주세요.'}, 
+        label = '세부 카테고리'
     )
 
     def clean(self):
@@ -39,6 +55,6 @@ class RegisterForm(forms.Form):
         stock = cleaned_data.get('stock')
         image = cleaned_data.get('image')
 
-        if not (name and price and description and stock):
+        if not (name and price and description and stock and image):
             self.add_error('name', '값이 없습니다')
             self.add_error('price', '값이 없습니다')

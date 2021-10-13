@@ -19,8 +19,8 @@ class PathAndRename(object):
 
 class Product(models.Model):
     seller_id       = models.ForeignKey(to='seller.Seller',db_column='seller_id', on_delete=models.RESTRICT, null=True)
-    category_id     = models.ForeignKey(to='product.ProductCategory',db_column='category_id', on_delete=models.RESTRICT, null=True)
-    subcategory_id  = models.ForeignKey(to='product.ProductSubcategory',db_column='subcategory_id', on_delete=models.RESTRICT, null=True)
+    category_id     = models.ForeignKey(to='product.ProductCategory',db_column='category_id', on_delete=models.RESTRICT, null=True, default=None)
+    subcategory_id  = models.ForeignKey(to='product.ProductSubcategory',db_column='subcategory_id', on_delete=models.RESTRICT, null=True, default=None)
     name            = models.CharField(max_length=256, verbose_name='상품명')
     price           = models.IntegerField(verbose_name='상품가격')
     description     = models.TextField(verbose_name='상품설명')
@@ -50,6 +50,12 @@ class ProductImage(models.Model):
 class ProductCategory(models.Model):
     product_id = models.ForeignKey(to='product.Product', db_column='product_id', on_delete=models.SET_NULL, null=True, default=None)
     category = models.CharField(max_length=16)
+    class Meta:
+        db_table = 'product_category'
 
 class ProductSubcategory(models.Model):
     product_id = models.ForeignKey(to='product.Product', db_column='product_id', on_delete=models.SET_NULL, null=True, default=None)
+    product_category_id = models.ForeignKey(to='product.ProductCategory', db_column='product_category_id', on_delete=models.SET_NULL, null=True, default=None)
+    category = models.CharField(max_length=16, null=True, default=None)
+    class Meta:
+        db_table = 'product_subcategory'

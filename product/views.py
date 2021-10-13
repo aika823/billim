@@ -8,8 +8,8 @@ from order.models import Order
 from rest_framework import generics
 from rest_framework import mixins
 
-from .models import Product, ProductImage
-from .forms import RegisterForm
+from .models import Product, ProductCategory, ProductImage, ProductSubcategory
+from .forms import ProductRegisterForm
 from .serializers import ProductSerializer
 
 from user.models import User
@@ -56,19 +56,30 @@ class ProductDetail(DetailView):
         context['form'] = OrderForm(self.request)
         return context
 
+
 def product_detail(request, product_id):
     product = Product.objects.get(id=product_id)
-    images = ProductImage.objects.filter(product_id=product)
+    images = ProductImage.objects.filter(product_id=product_id)
+    try:
+        category = ProductCategory.objects.get(product_id=product)
+    except ProductCategory.DoesNotExist:
+        category = None
+    try:
+        subcategory = ProductSubcategory.objects.get(product_id=product)
+    except ProductSubcategory.DoesNotExist:
+        subcategory = None
     form = OrderForm
-    return render(request, 'product_detail.html', 
+    return render(
+        request, 
+        'product_detail.html',
         {
             'product': product,
             'images': images,
-            'form': form
+            'form': form,
+            'category': category,
+            'subcategory': subcategory
         }
     )
-
-
 
 
 def create(request):
@@ -83,35 +94,40 @@ def create(request):
     # 셀러 상품 등록 로직
     if (request.method == 'POST') & (seller is not None):
 
+        # 상품 기본정보 저장
         product = Product()
         product.name = request.POST['name']
         product.price = request.POST['price']
         product.description = request.POST['description']
         product.stock = request.POST['stock']
         product.seller_id = seller
+        product.category_id_id = request.POST['category']
+        product.subcategory_id_id = request.POST['subcategory']
         product.save()
 
+        # 썸네일 이미지 저장
         thumbnail_image = ProductImage()
         thumbnail_image.product_id = product
         thumbnail_image.image = request.FILES.get('thumbnail_image')
         thumbnail_image.thumbnail = True
         thumbnail_image.save()
-        thumbnail_image.image = '{}/{}'.format(image_url, thumbnail_image.image)    
+        thumbnail_image.image = '{}/{}'.format(image_url, thumbnail_image.image)
         thumbnail_image.save()
 
+        # 상품 이미지 저장
         for img in request.FILES.getlist('images'):
             product_image = ProductImage()
-            product_image.product_id = product  
+            product_image.product_id = product
             product_image.image = img
             product_image.save()
-            product_image.image = '{}/{}'.format(image_url, product_image.image)    
+            product_image.image = '{}/{}'.format(image_url, product_image.image)
             product_image.save()
-        
+
         return redirect('/product/'+str(product.id))
 
     # 셀러 상품 등록 페이지
     else:
         if seller:
-            return render(request, 'product_register.html', {'form': RegisterForm})
+            return render(request, 'product_register.html', {'product_form': ProductRegisterForm})
         else:
             return render(request, 'product_register.html', {'form': None})

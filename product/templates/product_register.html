@@ -26,12 +26,15 @@
     <form method="POST" action="." enctype="multipart/form-data">
       {% csrf_token %}
       
-      {% for field in form %}
+      {% for field in product_form %}
+
         <div class="form-group">
           <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          
           {% if field.name == 'description' %}
             <textarea class="form-control" name="{{ field.name }}" id="{{ field.id_for_label }}"></textarea>
-          {% elif field.name == 'images' %}
+          
+          {% elif field.field.widget.input_type == 'file' %}
             <input 
               type="{{ field.field.widget.input_type }}" 
               class="form-control" 
@@ -40,6 +43,19 @@
               name="{{ field.name }}" 
               multiple
             >
+          
+          {% elif field.field.widget.input_type == 'select' %}
+            <select 
+              class="form-control" 
+              id="{{ field.id_for_label }}"
+              placeholder="{{ field.label }}" 
+              name="{{ field.name }}" 
+            >
+            {% for option in field %}
+              {{option}}
+            {% endfor %}
+            </select>
+
           {% else %}
             <input 
               type="{{ field.field.widget.input_type }}" 
@@ -49,10 +65,13 @@
               name="{{ field.name }}" 
             />
           {% endif %}
+
         </div>
+
         {% if field.errors %}
           <span style="color: red">{{ field.errors }}</span>
         {% endif %}
+        
       {% endfor %}
       
       <button type="submit" class="btn btn-primary">생성하기!</button>

@@ -72,6 +72,11 @@ BATON = {
 
 INSTALLED_APPS = [
     # 'baton',
+
+    # Django autocomplete light
+    'dal',
+    'dal_select2',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
