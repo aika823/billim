@@ -7,8 +7,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_DIR = os.path.dirname(BASE_DIR)
 PROJECT_ROOT    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-BILLIM_URL = 'http://localhost:8000'
-# BILLIM_URL = 'http://billim.co.kr'
+# BILLIM_URL = 'http://localhost:8000'
+BILLIM_URL = 'http://billim.co.kr'
 
 IMAGE_URL = 'http://static.billim.co.kr'
 
