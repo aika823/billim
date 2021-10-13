@@ -8,8 +8,8 @@ from order.models import Order
 from rest_framework import generics
 from rest_framework import mixins
 
-from .models import Category, Product, ProductCategory, ProductImage, Subcategory
-from .forms import ProductRegisterForm
+from .models import Category, Product, ProductCategory, ProductImage, Qna, Subcategory
+from .forms import AnswerForm, ProductRegisterForm, QuestionForm
 from .serializers import ProductSerializer
 
 from user.models import User
@@ -60,21 +60,18 @@ class ProductDetail(DetailView):
 def product_detail(request, product_id):
     product = Product.objects.get(id=product_id)
     images = ProductImage.objects.filter(product_id=product_id)
-    product_category_id = product.category_id
-    category = product_category_id.category_id
-    subcategory = product_category_id.subcategory_id
-    form = OrderForm
-    return render(
-        request, 
-        'product_detail.html',
-        {
-            'product': product,
-            'images': images,
-            'form': form,
-            'category': category,
-            'subcategory': subcategory
-        }
-    )
+    product_category = product.category_id
+    context = {
+        'product': product,
+        'images': images,
+        'form': OrderForm,
+        'question_form': QuestionForm,
+        'answer_form': AnswerForm,
+        'category': product_category.category_id,
+        'subcategory': product_category.subcategory_id,
+        'qna_list': Qna.objects.filter(product_id=product_id)
+    }
+    return render(request, 'product_detail.html', context)
 
 
 def create(request):
@@ -131,3 +128,23 @@ def create(request):
             return render(request, 'product_register.html', {'product_form': ProductRegisterForm})
         else:
             return render(request, 'product_register.html', {'form': None})
+
+
+def add_qna(request):
+    user_id = request.session.get('user')
+    if (request.method == 'POST'):
+        qna_id = request.POST.get('qna_id')
+        # 답변    
+        if qna_id:
+            qna = Qna.objects.get(id=qna_id)
+            qna.answer = request.POST.get('answer')
+        # 질문
+        else:
+            qna = Qna()
+            qna.question = request.POST.get('question')
+            qna.user_id = user_id
+            qna.product_id = request.POST.get('product_id')
+        
+        qna.save()
+    return redirect(request.META['HTTP_REFERER'])
+        

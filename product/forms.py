@@ -1,11 +1,28 @@
 from django import forms
 from .models import Category, Subcategory
 from django.db.models import Count
+from django.views.decorators.csrf import csrf_protect
+
+
 
 # 카테고리 선택 폼
 class CategoryChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return obj.category + ' ({})'.format(obj.counter)
+
+class QuestionForm(forms.Form):
+    question = forms.CharField(
+        error_messages={},
+        max_length=64, 
+        label='질문'
+    )
+
+class AnswerForm(forms.Form):
+    answer = forms.CharField(
+        error_messages={},
+        max_length=64, 
+        label='답변'
+    )
 
 # 상품 입력 폼
 class ProductRegisterForm(forms.Form):

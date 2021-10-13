@@ -53,16 +53,25 @@ class Category(models.Model):
 
 class Subcategory(models.Model):
     category_id = models.ForeignKey(to='product.Category', db_column='category_id', on_delete=models.SET_NULL, null=True, default=None)
-    category = models.CharField(max_length=16, null=True, default=None)
+    category    = models.CharField(max_length=16, null=True, default=None)
     def __id__(self):
         return self.id
     class Meta:
         db_table = 'subcategory'
 
 class ProductCategory(models.Model):
-    category_id = models.ForeignKey(to='product.Category', db_column='category_id', on_delete=models.SET_NULL, null=True, default=None)
-    subcategory_id = models.ForeignKey(to='product.Subcategory', db_column='subcategory_id', on_delete=models.SET_NULL, null=True, default=None)
+    category_id     = models.ForeignKey(to='product.Category', db_column='category_id', on_delete=models.SET_NULL, null=True, default=None)
+    subcategory_id  = models.ForeignKey(to='product.Subcategory', db_column='subcategory_id', on_delete=models.SET_NULL, null=True, default=None)
     def __id__(self):
         return self.id
     class Meta:
         db_table = 'product_category'
+
+class Qna(models.Model):
+    user        = models.ForeignKey(to='user.User', db_column='user_id', on_delete=models.SET_NULL, null=True, default=None)
+    product     = models.ForeignKey(to='product.Product', db_column='product_id', on_delete=models.SET_NULL, null=True, default=None)
+    question    = models.CharField(max_length=16, null=True, default=None)
+    answer      = models.CharField(max_length=16, null=True, default=None)
+
+    class Meta:
+        db_table = 'qna'

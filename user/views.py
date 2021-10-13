@@ -170,6 +170,7 @@ def callback_social(request, type):
 
     # 소셜 로그인 후 홈페이지로 이동
     request.session['user'] = user.id
+    request.session['user_obj'] = user
     # return render(request, 'home.html', {'test': user_info})
     return redirect('/')
 
@@ -203,8 +204,7 @@ def login(request):
                 output_field=CharField()
             )
         ).filter(image__isnull = False)
-
-        print(products.query)
+        
 
     return render(request, 'login.html', {
         'form': form, 
