@@ -7,8 +7,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_DIR = os.path.dirname(BASE_DIR)
 PROJECT_ROOT    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# BILLIM_URL = 'http://localhost:8000'
-BILLIM_URL = 'http://billim.co.kr'
+BILLIM_URL = 'http://localhost:8000'
+# BILLIM_URL = 'http://billim.co.kr'
 
 IMAGE_URL = 'http://static.billim.co.kr'
 
@@ -177,7 +177,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECRET_DIR = os.path.join(PROJECT_ROOT, 'secret')
 SECRETS = json.load(open(os.path.join(SECRET_DIR, 'secret.json'), 'rb'))
 
-# AWS SETTINGS
+# API SETTINGS
 AWS_ACCESS_KEY_ID = SECRETS['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = SECRETS['AWS_SECRET_ACCESS_KEY']
 AWS_REGION = 'ap-northeast-2'
@@ -185,6 +185,11 @@ AWS_STORAGE_BUCKET_NAME = 'static.billim.co.kr'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,AWS_REGION)
 AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400',}
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+NAVER_CLIENT_ID  = SECRETS['NAVER_CLIENT_ID']
+NAVER_CLOUD_CLIENT_ID = SECRETS['NAVER_CLOUD_CLIENT_ID']
+NAVER_CLOUD_CLIENT_SECRET = SECRETS['NAVER_CLOUD_CLIENT_SECRET']
+KAKAO_CLIENT_ID  = SECRETS['KAKAO_CLIENT_ID']
 
 # MEDIA
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

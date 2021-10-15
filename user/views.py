@@ -6,7 +6,6 @@ from django.db.models.query_utils import Q, FilteredRelation
 import requests
 import base64
 
-
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
 from django.views.generic.edit import FormView
@@ -24,8 +23,8 @@ from .models import User
 from .forms import RegisterForm
 from user.decorators import admin_required
 
-client_id_naver = 'WO73y3DTPypJ9B7qq56N'
-client_id_kakao = 'afa386bd37692148a6c914da561c8458'
+client_id_naver = settings.NAVER_CLIENT_ID
+client_id_kakao = settings.KAKAO_CLIENT_ID
 billim_url = settings.BILLIM_URL
 image_url = settings.IMAGE_URL
 
@@ -234,3 +233,4 @@ class LoginView(FormView):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+

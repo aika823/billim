@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=w2no0h42m6"></script>
+</head>
+<body>
+
+<div id="map" style="width:100%;height:400px;"></div>
+
+<script>
+var mapOptions = {
+    // center: new naver.maps.LatLng(36.3595704, 127.105399),
+    center: new naver.maps.LatLng("{{coordinate_y}}", "{{coordinate_x}}"),
+    zoom: 18
+};
+var map = new naver.maps.Map('map', mapOptions);
+</script>
+</body>
+</html>

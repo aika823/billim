@@ -1,7 +1,9 @@
+import json
 from django.conf import settings
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView
 from django.utils.decorators import method_decorator
+import requests
 from order.models import Order
 from rest_framework import generics
 from rest_framework import mixins
@@ -56,6 +58,23 @@ class ProductDetail(DetailView):
 
 
 def product_detail(request, product_id):
+
+    # 네이버 지도 API, 추후 분리 필요
+    seller_address = Product.objects.get(id=product_id).seller_id.address
+    url = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode"
+    data = {
+        "query" : "인천광역시 부평구 갈월서로 26",
+        "query" : seller_address,
+    }
+    headers = {
+       "X-NCP-APIGW-API-KEY-ID" : settings.NAVER_CLOUD_CLIENT_ID,
+       "X-NCP-APIGW-API-KEY" : settings.NAVER_CLOUD_CLIENT_SECRET
+    }
+    response = requests.request("GET", url, params=data,headers=headers).json()
+    coordinate_x = response['addresses'][0]['x']
+    coordinate_y = response['addresses'][0]['y']
+    
+    # 상품 상세정보
     user_id = request.session.get('user')
     product = Product.objects.get(id=product_id)
     images = ProductImage.objects.filter(product_id=product_id)
@@ -73,7 +92,9 @@ def product_detail(request, product_id):
         'category': product_category.category_id,
         'subcategory': product_category.subcategory_id,
         'qna_list': Qna.objects.filter(product_id=product_id),
-        'bookmark': bookmark
+        'bookmark': bookmark,
+        'coordinate_x':coordinate_x, 
+        'coordinate_y':coordinate_y
     }
     return render(request, 'product_detail.html', context)
 
@@ -179,3 +200,23 @@ def add_qna(request):
         qna.save()
 
     return redirect(request.META['HTTP_REFERER'])
+
+
+def test(request):
+    return render(request, 'map_test.html')
+
+
+
+def test(request):
+    url = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode"
+    data = {
+        "query" : "인천광역시 부평구 갈월서로 26",
+    }
+    headers = {
+       "X-NCP-APIGW-API-KEY-ID" : settings.NAVER_CLOUD_CLIENT_ID,
+       "X-NCP-APIGW-API-KEY" : settings.NAVER_CLOUD_CLIENT_SECRET
+    }
+    response = requests.request("GET", url, params=data,headers=headers).json()
+    coordinate_x = response['addresses'][0]['x']
+    coordinate_y = response['addresses'][0]['y']
+    return render(request, 'map_test.html', {'coordinate_x':coordinate_x, 'coordinate_y':coordinate_y})
