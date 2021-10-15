@@ -6,14 +6,17 @@ from django.db.models.query_utils import Q, FilteredRelation
 import requests
 import base64
 
+
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
 from django.views.generic.edit import FormView
 from django.conf import settings
 from requests.sessions import session
+from rest_framework import viewsets
 
 from product.models import Product, ProductImage
 from seller.models import Seller
+from user.serializer import UserSerializer
 
 from .forms import RegisterForm
 from .forms import LoginForm, RegisterForm
@@ -226,3 +229,8 @@ class LoginView(FormView):
     def form_valid(self, form):
         self.request.session['user'] = form.data.get('email')
         return super().form_valid(form)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
